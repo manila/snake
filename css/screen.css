@@ -1,0 +1,7 @@
+html {
+	background: #abddbc;
+}
+canvas#snake-game {
+	margin: 0px auto 0px auto;
+	display: block;
+}
