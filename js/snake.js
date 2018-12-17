@@ -2,7 +2,7 @@ const canvas = document.getElementById("snake-game");
 const ctx = canvas.getContext("2d");
 
 const gameHeight = 48;
-const gameWidth = 84;
+const gameWidth = 48;
 const scaleMultiplier = 4;
 const canvasWidth = (gameWidth * scaleMultiplier) + gameWidth;
 const canvasHeight = (gameHeight * scaleMultiplier) + gameHeight;
