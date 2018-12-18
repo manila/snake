@@ -3,11 +3,26 @@ const ctx = canvas.getContext("2d");
 
 const gameHeight = 48;
 const gameWidth = 48;
+const pixelPadding = 1;
 const scaleMultiplier = 4;
 const canvasWidth = (gameWidth * scaleMultiplier) + gameWidth;
 const canvasHeight = (gameHeight * scaleMultiplier) + gameHeight;
 
 function drawGrid() {
+	ctx.shadowColor = "#444";
+ctx.shadowBlur = 0;
+ctx.shadowOffsetX = 0.5;
+ctx.shadowOffsetY = 0.5;
+	for (w = 0; w < canvasWidth; w += 4 + pixelPadding)
+	{
+		for (h = 0; h < canvasHeight; h += 4 + pixelPadding)
+		{
+			ctx.fillRect(w, h, scaleMultiplier, scaleMultiplier);
+		} 
+	}
+
+
+	/*
 	ctx.lineWidth = 1;
 	ctx.strokeStyle = "#abddbc";
 
@@ -28,6 +43,7 @@ function drawGrid() {
 	}
 
 	ctx.translate(-0.5, -0.5);
+	*/
 }
 
 function drawGame() {
