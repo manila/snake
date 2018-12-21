@@ -68,13 +68,11 @@ function drawSnakePiece(x, y, part, direction) {
 		if (part[i] == 1)
 		{
 			switch (direction) {
-				case "right":
-					drawPixel((x * 4) + Math.floor(i % 4), (y * 4) + Math.floor(i / 4));
-					break;
-				case "down":	
+				case "down":
 					drawPixel((x * 4) + Math.floor(i / 4), (y * 4) + Math.floor(i % 4));
 					break;
 				default:
+					drawPixel((x * 4) + Math.floor(i % 4), (y * 4) + Math.floor(i / 4));
 					break;
 			}
 		}
@@ -88,14 +86,43 @@ function drawGame() {
 	}
 }
 
+Array.prototype.head = function () {
+	console.log(this);
+	return this[this.length - 1];
+}
+
 function updateSnake() {
-	if (SNAKE_DIR == "down") {
-		Snake[0].y = Snake[Snake.length - 1].y + 1;
-		Snake[0].x = Snake[Snake.length - 1].x;
-	} else {
-		Snake[0].x = Snake[Snake.length - 1].x + 1;
+	if (Snake.head().x > 21) {
+		Snake.head().x = 0;
+	} else if (Snake.head().y > 12) {
+		Snake.head().y = 0;
+	} else if (Snake.head().x < 0) {
+		Snake.head().x = 21;
+	} else if (Snake.head().y < 0) {
+		Snake.head().y = 12;
 	}
-	Snake[Snake.length - 1].piece = SNAKE_TURN;
+
+	switch (SNAKE_DIR) {
+		case "down":
+		Snake[0].x = Snake[Snake.length - 1].x;
+		Snake[0].y = Snake[Snake.length - 1].y + 1;
+			break;
+		case "up":
+		Snake[0].x = Snake[Snake.length - 1].x;
+		Snake[0].y = Snake[Snake.length - 1].y - 1;
+			break;
+		case "left":
+		Snake[0].y = Snake[Snake.length - 1].y;
+		Snake[0].x = Snake[Snake.length - 1].x - 1;
+			break;
+		case "right":
+		Snake[0].y = Snake[Snake.length - 1].y;
+		Snake[0].x = Snake[Snake.length - 1].x + 1;
+			break;
+	}
+
+
+	Snake[Snake.length - 1].piece = SNAKE_BODY;
 	Snake.push(Snake.shift());
 	Snake[0].piece = SNAKE_TAIL;
 	Snake[Snake.length - 1].piece = SNAKE_HEAD;
@@ -111,8 +138,18 @@ function gameLoop() {
 window.onkeydown = function (e) {
 	console.log(e.keyCode);
 	switch (e.keyCode) {
+		case 38:
+			SNAKE_DIR = "up";
+			break;
 		case 40:
 			SNAKE_DIR = "down";
+			break;
+		case 37:
+			SNAKE_DIR = "left";
+			break;
+		case 39:
+			SNAKE_DIR = "right";
+			break;
 		default:
 			break;
 	}
