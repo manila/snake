@@ -30,17 +30,17 @@ const SNAKE_TAIL = [0, 0, 0, 0,
 		    1, 1, 1, 1,
 		    0, 0, 0, 0];
 
-var SNAKE_DIR = "right";
+var SNAKE_DIR = [1, 0];
 
 Snake = [
-		{x: 0, y: 0, piece: SNAKE_TAIL, direction: SNAKE_DIR}, 
-		{x: 1, y: 0, piece: SNAKE_BODY, direction: SNAKE_DIR}, 
-		{x: 2, y: 0, piece: SNAKE_BODY, direction: SNAKE_DIR}, 
-		{x: 3, y: 0, piece: SNAKE_BODY, direction: SNAKE_DIR}, 
-		{x: 4, y: 0, piece: SNAKE_BODY, direction: SNAKE_DIR}, 
-		{x: 5, y: 0, piece: SNAKE_BODY, direction: SNAKE_DIR}, 
-		{x: 6, y: 0, piece: SNAKE_BODY, direction: SNAKE_DIR}, 
-		{x: 7, y: 0, piece: SNAKE_HEAD, direction: SNAKE_DIR}
+		{x: 0, y: 0, piece: SNAKE_TAIL, direction: [1, 0]}, 
+		{x: 1, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 2, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 3, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 4, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 5, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 6, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 7, y: 0, piece: SNAKE_HEAD, direction: [1, 0]}
 	]; 
 
 function drawGrid() {
@@ -63,17 +63,14 @@ function drawPixel(x, y) {
 }
 
 function drawSnakePiece(x, y, part, direction) {
-	for (let i = 0; i < 16; i++)
+	for (let i = 0; i != 16 * direction[0]; i += direction[0])
 	{
 		if (part[i] == 1)
 		{
-			switch (direction) {
-				case "down":
-					drawPixel((x * 4) + Math.floor(i / 4), (y * 4) + Math.floor(i % 4));
-					break;
-				default:
-					drawPixel((x * 4) + Math.floor(i % 4), (y * 4) + Math.floor(i / 4));
-					break;
+			if (direction[1] == -1) {
+				drawPixel((x * 4) + Math.floor((i) / 4), (y * 4) + Math.floor((15 - i) % 4));
+			} else {
+				drawPixel((x * 4) + Math.floor((i) % 4), (y * 4) + Math.floor((i) / 4));
 			}
 		}
 	}
@@ -87,7 +84,6 @@ function drawGame() {
 }
 
 Array.prototype.head = function () {
-	console.log(this);
 	return this[this.length - 1];
 }
 
@@ -102,31 +98,14 @@ function updateSnake() {
 		Snake.head().y = 12;
 	}
 
-	switch (SNAKE_DIR) {
-		case "down":
-		Snake[0].x = Snake[Snake.length - 1].x;
-		Snake[0].y = Snake[Snake.length - 1].y + 1;
-			break;
-		case "up":
-		Snake[0].x = Snake[Snake.length - 1].x;
-		Snake[0].y = Snake[Snake.length - 1].y - 1;
-			break;
-		case "left":
-		Snake[0].y = Snake[Snake.length - 1].y;
-		Snake[0].x = Snake[Snake.length - 1].x - 1;
-			break;
-		case "right":
-		Snake[0].y = Snake[Snake.length - 1].y;
-		Snake[0].x = Snake[Snake.length - 1].x + 1;
-			break;
-	}
+	Snake[0].x = Snake.head().x + SNAKE_DIR[0];
+	Snake[0].y = Snake.head().y + SNAKE_DIR[1];
 
-
-	Snake[Snake.length - 1].piece = SNAKE_BODY;
+	Snake.head().piece = SNAKE_BODY;
 	Snake.push(Snake.shift());
 	Snake[0].piece = SNAKE_TAIL;
-	Snake[Snake.length - 1].piece = SNAKE_HEAD;
-	Snake[Snake.length - 1].direction = SNAKE_DIR;
+	Snake.head().piece = SNAKE_HEAD;
+	Snake.head().direction = SNAKE_DIR;
 }
 
 function gameLoop() {
@@ -139,16 +118,16 @@ window.onkeydown = function (e) {
 	console.log(e.keyCode);
 	switch (e.keyCode) {
 		case 38:
-			SNAKE_DIR = "up";
+			SNAKE_DIR = [0, -1];
 			break;
 		case 40:
-			SNAKE_DIR = "down";
+			SNAKE_DIR = [0, 1];
 			break;
 		case 37:
-			SNAKE_DIR = "left";
+			SNAKE_DIR = [-1, 0];
 			break;
 		case 39:
-			SNAKE_DIR = "right";
+			SNAKE_DIR = [1, 0];
 			break;
 		default:
 			break;
