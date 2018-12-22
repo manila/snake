@@ -19,11 +19,10 @@ const SNAKE_BODY = [0, 0, 0, 0,
 		    1, 0, 1, 1,
 		    0, 0, 0, 0];
 
-const SNAKE_TURN = [0,0,0,0,
-		    1,1,0,0,
-		    1,0,1,0,
-		    0,1,1,0];
-
+const SNAKE_TURN = [0, 0, 0, 0,
+		    1, 1, 0, 0,
+		    1, 0, 1, 0,
+		    0, 1, 1, 0];
 
 const SNAKE_TAIL = [0, 0, 0, 0,
 		    0, 0, 1, 1,
@@ -63,14 +62,18 @@ function drawPixel(x, y) {
 }
 
 function drawSnakePiece(x, y, part, direction) {
-	for (let i = 0; i != 16 * direction[0]; i += direction[0])
+	for (let i = 0; i < 16; i++)
 	{
 		if (part[i] == 1)
 		{
 			if (direction[1] == -1) {
 				drawPixel((x * 4) + Math.floor((i) / 4), (y * 4) + Math.floor((15 - i) % 4));
+			} else if (direction[0] == -1) {
+				drawPixel((x * 4) + Math.floor((15 - i) % 4), (y * 4) + Math.floor(i / 4));
+			} else if (direction[1] == 1) {
+				drawPixel((x * 4) + Math.floor((15 - i) / 4), (y * 4) + Math.floor((i) % 4));
 			} else {
-				drawPixel((x * 4) + Math.floor((i) % 4), (y * 4) + Math.floor((i) / 4));
+				drawPixel((x * 4) + Math.floor(i % 4), (y * 4) + Math.floor(i / 4));
 			}
 		}
 	}
@@ -88,14 +91,14 @@ Array.prototype.head = function () {
 }
 
 function updateSnake() {
-	if (Snake.head().x > 21) {
+	if (Snake.head().x > 20) {
 		Snake.head().x = 0;
-	} else if (Snake.head().y > 12) {
+	} else if (Snake.head().y > 11) {
 		Snake.head().y = 0;
 	} else if (Snake.head().x < 0) {
-		Snake.head().x = 21;
+		Snake.head().x = 20;
 	} else if (Snake.head().y < 0) {
-		Snake.head().y = 12;
+		Snake.head().y = 11;
 	}
 
 	Snake[0].x = Snake.head().x + SNAKE_DIR[0];
