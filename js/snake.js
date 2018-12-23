@@ -1,6 +1,8 @@
 const canvas = document.getElementById("snake-game");
 const ctx = canvas.getContext("2d");
 
+const gameGridWidth = 21;
+const gameGridHeight = 12;
 const gameHeight = 48;
 const gameWidth = 84;
 const pixelPadding = 1;
