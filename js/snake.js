@@ -31,6 +31,8 @@ const SNAKE_TAIL = [0, 0, 0, 0,
 		    1, 1, 1, 1,
 		    0, 0, 0, 0];
 
+var FOOD_PIECES = [{x: 0; y: 0;}];
+
 var SNAKE_DIR = [1, 0];
 
 Snake = [
@@ -111,6 +113,10 @@ function updateSnake() {
 	Snake[0].piece = SNAKE_TAIL;
 	Snake.head().piece = SNAKE_HEAD;
 	Snake.head().direction = SNAKE_DIR;
+}
+
+function generateBeets() {
+
 }
 
 function gameLoop() {
