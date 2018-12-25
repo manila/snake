@@ -31,7 +31,11 @@ const SNAKE_TAIL = [0, 0, 0, 0,
 		    1, 1, 1, 1,
 		    0, 0, 0, 0];
 
-var FOOD_PIECES = [{x: 0; y: 0;}];
+const FOOD_PIECE = [0, 1, 0,
+	            1, 0, 1,
+	            0, 1, 0];
+
+var FOOD_PIECES = [[0, 0]];
 
 var SNAKE_DIR = [1, 0];
 
