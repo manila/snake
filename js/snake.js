@@ -116,7 +116,7 @@ function updateSnake() {
 }
 
 function generateBeets() {
-
+	FOOD_PIECES.push({x: 0, y: 0});
 }
 
 function gameLoop() {
