@@ -1,5 +1,5 @@
 html {
-	background: #212;
+	!background: #212;
 }
 canvas#snake-game {
 	background: #abddbc;
