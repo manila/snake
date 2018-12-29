@@ -50,6 +50,10 @@ Snake = [
 		{x: 7, y: 0, piece: SNAKE_HEAD, direction: [1, 0]}
 	]; 
 
+
+var Snake = function () {
+}
+
 function drawGrid() {
 	for (w = 0; w < canvasWidth / scaleMultiplier; w++)
 	{
