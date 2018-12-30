@@ -39,7 +39,8 @@ var FOOD_PIECES = [[0, 0]];
 
 var SNAKE_DIR = [1, 0];
 
-Snake = [
+var Snake = {
+	body: [
 		{x: 0, y: 0, piece: SNAKE_TAIL, direction: [1, 0]}, 
 		{x: 1, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
 		{x: 2, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
@@ -48,10 +49,15 @@ Snake = [
 		{x: 5, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
 		{x: 6, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
 		{x: 7, y: 0, piece: SNAKE_HEAD, direction: [1, 0]}
-	]; 
-
-
-var Snake = function () {
+	],	
+	head: function () {
+		return this.body[this.body.length - 1];
+	},
+	tail: function () {
+		return this.body[0];
+	},
+	grow: function () {
+	}
 }
 
 function drawGrid() {
@@ -92,14 +98,11 @@ function drawSnakePiece(x, y, part, direction) {
 }
 
 function drawGame() {
-	for (let i = 0; i < Snake.length; i++)
+	for (let i = 0; i < Snake.body.length; i++)
 	{
-		drawSnakePiece(Snake[i].x, Snake[i].y, Snake[i].piece, Snake[i].direction);
+		console.log("called");
+		drawSnakePiece(Snake.body[i].x, Snake.body[i].y, Snake.body[i].piece, Snake.body[i].direction);
 	}
-}
-
-Array.prototype.head = function () {
-	return this[this.length - 1];
 }
 
 function updateSnake() {
@@ -113,12 +116,12 @@ function updateSnake() {
 		Snake.head().y = 11;
 	}
 
-	Snake[0].x = Snake.head().x + SNAKE_DIR[0];
-	Snake[0].y = Snake.head().y + SNAKE_DIR[1];
+	Snake.body[0].x = Snake.head().x + SNAKE_DIR[0];
+	Snake.body[0].y = Snake.head().y + SNAKE_DIR[1];
 
 	Snake.head().piece = SNAKE_BODY;
-	Snake.push(Snake.shift());
-	Snake[0].piece = SNAKE_TAIL;
+	Snake.body.push(Snake.body.shift());
+	Snake.body[0].piece = SNAKE_TAIL;
 	Snake.head().piece = SNAKE_HEAD;
 	Snake.head().direction = SNAKE_DIR;
 }
