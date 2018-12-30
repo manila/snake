@@ -11,6 +11,12 @@ const scaleMultiplier = 4;
 const canvasWidth = (gameWidth * scaleMultiplier) + gameWidth;
 const canvasHeight = (gameHeight * scaleMultiplier) + gameHeight;
 
+const NUMBERS = [[0,0,0,
+		  0,0,0,
+		  0,0,0,
+		  0,0,0,
+		  0,0,0]];
+
 const SNAKE_HEAD = [1, 0, 0, 0,
 		    0, 1, 1, 0,
 		    1, 1, 1, 0,
@@ -21,10 +27,10 @@ const SNAKE_BODY = [0, 0, 0, 0,
 		    1, 0, 1, 1,
 		    0, 0, 0, 0];
 
-const SNAKE_TURN = [0, 0, 0, 0,
-		    1, 1, 0, 0,
-		    1, 0, 1, 0,
-		    0, 1, 1, 0];
+const SNAKE_TURN = [1, 1, 1, 1,
+		    1, 1, 1, 1,
+		    1, 1, 1, 1,
+		    1, 1, 1, 1];
 
 const SNAKE_TAIL = [0, 0, 0, 0,
 		    0, 0, 1, 1,
@@ -41,14 +47,14 @@ var SNAKE_DIR = [1, 0];
 
 var Snake = {
 	body: [
-		{x: 0, y: 0, piece: SNAKE_TAIL, direction: [1, 0]}, 
-		{x: 1, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 2, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 3, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 4, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 5, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 6, y: 0, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 7, y: 0, piece: SNAKE_HEAD, direction: [1, 0]}
+		{x: 0, y: 1, piece: SNAKE_TAIL, direction: [1, 0]}, 
+		{x: 1, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 2, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 3, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 4, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 5, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 6, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 7, y: 1, piece: SNAKE_HEAD, direction: [1, 0]}
 	],	
 	head: function () {
 		return this.body[this.body.length - 1];
@@ -57,6 +63,7 @@ var Snake = {
 		return this.body[0];
 	},
 	grow: function () {
+		return this.body.unshift({x: this.head().x, y: this.head().y, piece: SNAKE_HEAD, direction: SNAKE_DIR});
 	}
 }
 
@@ -65,17 +72,38 @@ function drawGrid() {
 	{
 		for (h = 0; h < canvasHeight / scaleMultiplier; h++)
 		{
-			drawPixel(w, h);
+			drawPixel(w, h, "rgba(0,0,0,0.1)");
 		} 
 	}
 }
 
-function drawPixel(x, y) {
+function drawOutline() {
+	for (w = 0; w < canvasWidth / scaleMultiplier; w++)
+	{
+		for (h = 0; h < canvasHeight / scaleMultiplier; h++)
+		{
+			if (h == 0 || h == gameHeight - 1 || w == 0 || w == gameWidth -1)
+			{
+				drawPixel(w, h);
+			}
+		}
+	}
+}
+
+function drawScore() {
+}
+
+function drawPixel(x, y, color) {
+	if (color) {
+		ctx.fillStyle = color;
+	} else {
+		ctx.fillStyle = "rgba(0,0,0,0.7)";
+	}
 	ctx.shadowColor = "rgba(0,0,0,0.2)";
 	ctx.shadowBlur = 0;
 	ctx.shadowOffsetX = 0.5;
 	ctx.shadowOffsetY = 0.5;
-	
+
 	ctx.fillRect(x * (pixelPadding + scaleMultiplier), y * (scaleMultiplier + pixelPadding), scaleMultiplier, scaleMultiplier);
 }
 
@@ -98,6 +126,8 @@ function drawSnakePiece(x, y, part, direction) {
 }
 
 function drawGame() {
+	drawGrid();
+	drawOutline();
 	for (let i = 0; i < Snake.body.length; i++)
 	{
 		console.log("called");
@@ -119,6 +149,8 @@ function updateSnake() {
 	Snake.body[0].x = Snake.head().x + SNAKE_DIR[0];
 	Snake.body[0].y = Snake.head().y + SNAKE_DIR[1];
 
+	console.log(SNAKE_DIR);
+
 	Snake.head().piece = SNAKE_BODY;
 	Snake.body.push(Snake.body.shift());
 	Snake.body[0].piece = SNAKE_TAIL;
@@ -132,15 +164,18 @@ function generateBeets() {
 
 function gameLoop() {
 	ctx.clearRect(0,0, canvasWidth, canvasHeight);
-	drawGame();
 	updateSnake();
+	drawGame();
 }
 
 window.onkeydown = function (e) {
 	console.log(e.keyCode);
 	switch (e.keyCode) {
 		case 38:
-			SNAKE_DIR = [0, -1];
+			if (SNAKE_DIR != [0, -1]) {
+				Snake.body[Snake.body.length - 2].piece = SNAKE_TURN;
+				SNAKE_DIR = [0, -1];
+			}
 			break;
 		case 40:
 			SNAKE_DIR = [0, 1];
@@ -151,9 +186,11 @@ window.onkeydown = function (e) {
 		case 39:
 			SNAKE_DIR = [1, 0];
 			break;
+		case 71:
+			Snake.grow();
 		default:
 			break;
 	}
 }
 
-setInterval(gameLoop, 200);
+setInterval(gameLoop, 600);
