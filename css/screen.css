@@ -1,5 +1,12 @@
 html {
+	background: #212;
+}
+div#game-container {
+	padding: 5px;
+	width: 420px;
+	margin: 0px auto 0px auto;
 	background: #bcb;
+	box-shadow: 0px 0px 2px #000 inset;
 }
 canvas#snake-game {
 	background: #bcb;

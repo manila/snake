@@ -46,6 +46,7 @@ var FOOD_PIECES = [[0, 0]];
 var SNAKE_DIR = [1, 0];
 
 var Snake = {
+	direction: [1, 0],
 	body: [
 		{x: 0, y: 1, piece: SNAKE_TAIL, direction: [1, 0]}, 
 		{x: 1, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
@@ -64,6 +65,18 @@ var Snake = {
 	},
 	grow: function () {
 		return this.body.unshift({x: this.head().x, y: this.head().y, piece: SNAKE_HEAD, direction: SNAKE_DIR});
+	},
+	move: function (directionX, directionY) {
+		if (this.direction['x'] != directionX && this.direction['y'] != directionY)
+		{
+			
+		}
+
+		this.tail().x = this.head().x + 1;
+		this.head().piece = SNAKE_BODY;
+		this.body.push(this.body.shift());
+		this.tail().piece = SNAKE_TAIL;
+		this.head().piece = SNAKE_HEAD;
 	}
 }
 
@@ -137,25 +150,16 @@ function drawGame() {
 
 function updateSnake() {
 	if (Snake.head().x > 20) {
-		Snake.head().x = 0;
+		Snake.head().x = 1;
 	} else if (Snake.head().y > 11) {
-		Snake.head().y = 0;
+		Snake.head().y = 1;
 	} else if (Snake.head().x < 0) {
 		Snake.head().x = 20;
 	} else if (Snake.head().y < 0) {
 		Snake.head().y = 11;
 	}
 
-	Snake.body[0].x = Snake.head().x + SNAKE_DIR[0];
-	Snake.body[0].y = Snake.head().y + SNAKE_DIR[1];
-
-	console.log(SNAKE_DIR);
-
-	Snake.head().piece = SNAKE_BODY;
-	Snake.body.push(Snake.body.shift());
-	Snake.body[0].piece = SNAKE_TAIL;
-	Snake.head().piece = SNAKE_HEAD;
-	Snake.head().direction = SNAKE_DIR;
+	Snake.move();
 }
 
 function generateBeets() {
