@@ -67,18 +67,28 @@ var Snake = {
 		return this.body.unshift({x: this.head().x, y: this.head().y, piece: SNAKE_HEAD, direction: SNAKE_DIR});
 	},
 	move: function (directionX, directionY) {
-		if (this.direction['x'] != directionX && this.direction['y'] != directionY)
-		{
-			
+		if (this.changedDir(directionX, directionY)) {
+			this.head().piece = SNAKE_TURN;
+			this.head().direction = [directionX, directionY];
 		}
-
-		this.tail().x = this.head().x + SNAKE_DIR[0];
-		this.tail().y = this.head().y + SNAKE_DIR[1];
-		this.head().piece = SNAKE_BODY;
-		this.body.push(this.body.shift());
+		else
+		{
+			this.head().piece = SNAKE_BODY;
+		}
+		this.body.push({x: this.head().x + directionX, y: this.head().y + directionY, piece: SNAKE_HEAD, direction: SNAKE_DIR});
+		this.body.shift();
 		this.tail().piece = SNAKE_TAIL;
-		this.head().piece = SNAKE_HEAD;
-		this.head().direction = SNAKE_DIR;
+		this.direction = [directionX, directionY];
+	},
+	changedDir: function (directionX, directionY) {
+		if (this.direction[0] == directionX && this.direction[1] == directionY)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 }
 
@@ -161,7 +171,7 @@ function updateSnake() {
 		Snake.head().y = 11;
 	}
 
-	Snake.move();
+	Snake.move(SNAKE_DIR[0], SNAKE_DIR[1]);
 }
 
 function generateBeets() {
@@ -179,7 +189,6 @@ window.onkeydown = function (e) {
 	switch (e.keyCode) {
 		case 38:
 			if (SNAKE_DIR != [0, -1]) {
-				Snake.body[Snake.body.length - 2].piece = SNAKE_TURN;
 				SNAKE_DIR = [0, -1];
 			}
 			//Snake.move(-1, 0);
