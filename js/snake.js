@@ -72,11 +72,13 @@ var Snake = {
 			
 		}
 
-		this.tail().x = this.head().x + 1;
+		this.tail().x = this.head().x + SNAKE_DIR[0];
+		this.tail().y = this.head().y + SNAKE_DIR[1];
 		this.head().piece = SNAKE_BODY;
 		this.body.push(this.body.shift());
 		this.tail().piece = SNAKE_TAIL;
 		this.head().piece = SNAKE_HEAD;
+		this.head().direction = SNAKE_DIR;
 	}
 }
 
@@ -167,8 +169,8 @@ function generateBeets() {
 }
 
 function gameLoop() {
-	ctx.clearRect(0,0, canvasWidth, canvasHeight);
 	updateSnake();
+	ctx.clearRect(0,0, canvasWidth, canvasHeight);
 	drawGame();
 }
 
@@ -180,6 +182,7 @@ window.onkeydown = function (e) {
 				Snake.body[Snake.body.length - 2].piece = SNAKE_TURN;
 				SNAKE_DIR = [0, -1];
 			}
+			//Snake.move(-1, 0);
 			break;
 		case 40:
 			SNAKE_DIR = [0, 1];
