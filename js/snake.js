@@ -27,10 +27,10 @@ const SNAKE_BODY = [0, 0, 0, 0,
 		    1, 0, 1, 1,
 		    0, 0, 0, 0];
 
-const SNAKE_TURN = [1, 1, 1, 1,
-		    1, 1, 1, 1,
-		    1, 1, 1, 1,
-		    1, 1, 1, 1];
+const SNAKE_TURN = [0, 0, 0, 0,
+		    0, 0, 1, 1,
+		    0, 1, 0, 1,
+		    0, 1, 1, 0];
 
 const SNAKE_TAIL = [0, 0, 0, 0,
 		    0, 0, 1, 1,
@@ -133,8 +133,12 @@ function drawPixel(x, y, color) {
 }
 
 function drawSnakePiece(x, y, part, direction) {
+
+	
+
 	for (let i = 0; i < 16; i++)
 	{
+
 		if (part[i] == 1)
 		{
 			if (direction[1] == -1) {
@@ -155,7 +159,6 @@ function drawGame() {
 	drawOutline();
 	for (let i = 0; i < Snake.body.length; i++)
 	{
-		console.log("called");
 		drawSnakePiece(Snake.body[i].x, Snake.body[i].y, Snake.body[i].piece, Snake.body[i].direction);
 	}
 }
@@ -202,11 +205,22 @@ window.onkeydown = function (e) {
 		case 39:
 			SNAKE_DIR = [1, 0];
 			break;
-		case 71:
+		case 71: // g - for growing
 			Snake.grow();
+			break;
+		case 80: // p - for pausing
+			if (!GAME_IS_PAUSED)
+			{
+				clearInterval(GameLoop);
+				GAME_IS_PAUSED = true;
+			} else {
+				GameLoop = setInterval(gameLoop, 600);
+				GAME_IS_PAUSED = false;
+			}
 		default:
 			break;
 	}
 }
 
-setInterval(gameLoop, 600);
+var GameLoop = setInterval(gameLoop, 600);
+var GAME_IS_PAUSED = false;
