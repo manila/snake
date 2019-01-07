@@ -32,6 +32,12 @@ const SNAKE_TURN = [0, 0, 0, 0,
 		    0, 1, 0, 1,
 		    0, 1, 1, 0];
 
+
+const SNAKE_FULL = [0, 1, 1, 0,
+		    1, 1, 0, 1,
+		    1, 0, 1, 1,
+		    0, 1, 1, 0];
+
 const SNAKE_TAIL = [0, 0, 0, 0,
 		    0, 0, 1, 1,
 		    1, 1, 1, 1,
@@ -44,6 +50,8 @@ const FOOD_PIECE = [0, 1, 0,
 var FOOD_PIECES = [[0, 0]];
 
 var SNAKE_DIR = [1, 0];
+
+var FOOD = {};
 
 var Snake = {
 	direction: [1, 0],
@@ -73,7 +81,10 @@ var Snake = {
 		}
 		else
 		{
-			this.head().piece = SNAKE_BODY;
+			if (this.head().piece != SNAKE_FULL)
+			{
+				this.head().piece = SNAKE_BODY;
+			}
 		}
 		this.body.push({x: this.head().x + directionX, y: this.head().y + directionY, piece: SNAKE_HEAD, direction: SNAKE_DIR});
 		this.body.shift();
@@ -132,9 +143,18 @@ function drawPixel(x, y, color) {
 	ctx.fillRect(x * (pixelPadding + scaleMultiplier), y * (scaleMultiplier + pixelPadding), scaleMultiplier, scaleMultiplier);
 }
 
-function drawSnakePiece(x, y, part, direction) {
+function drawBitmap(x, y, width, height, bitmap, flipX, flipY) {
 
-	
+	for (let i = 0; i < width*height; i++)
+	{
+		if (bitmap[i] == 1)
+		{
+			drawPixel((x * 4) + Math.floor(i % width), (y * 4) + Math.floor(i / height));
+		}
+	}
+}
+
+function drawSnakePiece(x, y, part, direction) {
 
 	for (let i = 0; i < 16; i++)
 	{
@@ -174,7 +194,20 @@ function updateSnake() {
 		Snake.head().y = 11;
 	}
 
+	if (Snake.head().x == FOOD.pos.x && Snake.head().y == FOOD.pos.y)
+	{
+		Snake.body[Snake.body.length - 1].piece = SNAKE_FULL;
+		Snake.grow();
+		makeFood();
+	}
+
 	Snake.move(SNAKE_DIR[0], SNAKE_DIR[1]);
+}
+
+function makeFood() {
+	var foodX = Math.floor(Math.random() * 20);
+	var foodY = Math.floor(Math.random() * 12);
+	FOOD = {pos: {x: foodX, y: foodY}, piece: FOOD_PIECE};
 }
 
 function generateBeets() {
@@ -185,25 +218,31 @@ function gameLoop() {
 	updateSnake();
 	ctx.clearRect(0,0, canvasWidth, canvasHeight);
 	drawGame();
+	drawBitmap(FOOD.pos.x, FOOD.pos.y, 3, 3, FOOD_PIECE);
 }
 
 window.onkeydown = function (e) {
 	console.log(e.keyCode);
 	switch (e.keyCode) {
 		case 38:
-			if (SNAKE_DIR != [0, -1]) {
+			if (Snake.changedDir(0, 1)) {
 				SNAKE_DIR = [0, -1];
 			}
-			//Snake.move(-1, 0);
 			break;
 		case 40:
-			SNAKE_DIR = [0, 1];
+			if (Snake.changedDir(0, -1)) {
+				SNAKE_DIR = [0, 1];
+			}
 			break;
 		case 37:
-			SNAKE_DIR = [-1, 0];
+			if (Snake.changedDir(1, 0)) {
+				SNAKE_DIR = [-1, 0];
+			}
 			break;
 		case 39:
-			SNAKE_DIR = [1, 0];
+			if (Snake.changedDir(-1, 0)) {
+				SNAKE_DIR = [1, 0];
+			}
 			break;
 		case 71: // g - for growing
 			Snake.grow();
@@ -214,7 +253,7 @@ window.onkeydown = function (e) {
 				clearInterval(GameLoop);
 				GAME_IS_PAUSED = true;
 			} else {
-				GameLoop = setInterval(gameLoop, 600);
+				GameLoop = setInterval(gameLoop, 200);
 				GAME_IS_PAUSED = false;
 			}
 		default:
@@ -222,5 +261,7 @@ window.onkeydown = function (e) {
 	}
 }
 
-var GameLoop = setInterval(gameLoop, 600);
+var GameLoop = setInterval(gameLoop, 200);
 var GAME_IS_PAUSED = false;
+
+makeFood();
