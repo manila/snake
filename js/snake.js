@@ -22,6 +22,12 @@ const SNAKE_HEAD = [1, 0, 0, 0,
 		    1, 1, 1, 0,
 	    	    0, 0, 0, 0];
 
+
+const SNAKE_EAT = [1, 0, 1, 0,
+		    0, 1, 0, 0,
+		    1, 1, 0, 0,
+	    	    0, 0, 1, 0];
+
 const SNAKE_BODY = [0, 0, 0, 0,
 		    1, 1, 0, 1,
 		    1, 0, 1, 1,
@@ -103,6 +109,13 @@ var Snake = {
 		else
 		{
 			return true;
+		}
+	},
+	willEat: function (foodX, foodY) {
+		if (Snake.head().x + (Snake.direction[0]) == foodX && Snake.head().y + (Snake.direction[1]) == foodY) {
+			Snake.head().piece = SNAKE_EAT;
+		} else {
+			//Snake.head().piece = SNAKE_HEAD;
 		}
 	}
 }
@@ -190,21 +203,24 @@ function updateSnake() {
 	Snake.move(Snake.direction[0], Snake.direction[1]);
 
 	if (Snake.head().x > 20) {
-		Snake.head().x = 1;
+		Snake.head().x = 0;
 	} else if (Snake.head().y > 11) {
-		Snake.head().y = 1;
+		Snake.head().y = 0;
 	} else if (Snake.head().x < 0) {
 		Snake.head().x = 20;
 	} else if (Snake.head().y < 0) {
 		Snake.head().y = 11;
 	}
 
+	Snake.willEat(FOOD.pos.x, FOOD.pos.y);
+
 	if (Snake.head().x == FOOD.pos.x && Snake.head().y == FOOD.pos.y)
 	{
-		Snake.body[Snake.body.length - 1].piece = SNAKE_FULL;
+		Snake.body[Snake.body.length - 2].piece = SNAKE_FULL;
 		Snake.grow();
 		makeFood();
 	}
+
 }
 
 function makeFood() {
@@ -256,7 +272,7 @@ window.onkeydown = function (e) {
 				clearInterval(GameLoop);
 				GAME_IS_PAUSED = true;
 			} else {
-				GameLoop = setInterval(gameLoop, 200);
+				GameLoop = setInterval(gameLoop, 300);
 				GAME_IS_PAUSED = false;
 			}
 		default:
@@ -265,7 +281,7 @@ window.onkeydown = function (e) {
 	//Snake.move(Snake.direction[0], Snake.direction[1]);
 }
 
-var GameLoop = setInterval(gameLoop, 200);
+var GameLoop = setInterval(gameLoop, 300);
 var GAME_IS_PAUSED = false;
 
 makeFood();
