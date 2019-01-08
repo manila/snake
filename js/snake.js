@@ -96,7 +96,7 @@ var Snake = {
 		this.direction[1] = directionY;
 	},
 	changedDir: function (directionX, directionY) {
-		if (this.direction[0] == directionX && this.direction[1] == directionY)
+		if (this.body[Snake.body.length - 2].direction[0] == directionX && this.body[Snake.body.length - 2].direction[1] == directionY)
 		{
 			return false;
 		}
