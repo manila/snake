@@ -72,7 +72,7 @@ var Snake = {
 		return this.body[0];
 	},
 	grow: function () {
-		return this.body.unshift({x: this.head().x, y: this.head().y, piece: SNAKE_HEAD, direction: SNAKE_DIR});
+		return this.body.unshift({x: this.head().x, y: this.head().y, piece: SNAKE_HEAD, direction: this.direction});
 	},
 	move: function (directionX, directionY) {
 		if (this.changedDir(directionX, directionY)) {
@@ -86,10 +86,14 @@ var Snake = {
 				this.head().piece = SNAKE_BODY;
 			}
 		}
-		this.body.push({x: this.head().x + directionX, y: this.head().y + directionY, piece: SNAKE_HEAD, direction: SNAKE_DIR});
+		this.body.push({x: this.head().x + directionX, y: this.head().y + directionY, piece: SNAKE_HEAD, direction: this.direction});
 		this.body.shift();
 		this.tail().piece = SNAKE_TAIL;
 		this.direction = [directionX, directionY];
+	},
+	setDir: function (directionX, directionY) {
+		this.direction[0] = directionX;
+		this.direction[1] = directionY;
 	},
 	changedDir: function (directionX, directionY) {
 		if (this.direction[0] == directionX && this.direction[1] == directionY)
@@ -158,7 +162,6 @@ function drawSnakePiece(x, y, part, direction) {
 
 	for (let i = 0; i < 16; i++)
 	{
-
 		if (part[i] == 1)
 		{
 			if (direction[1] == -1) {
@@ -184,6 +187,8 @@ function drawGame() {
 }
 
 function updateSnake() {
+	Snake.move(Snake.direction[0], Snake.direction[1]);
+
 	if (Snake.head().x > 20) {
 		Snake.head().x = 1;
 	} else if (Snake.head().y > 11) {
@@ -200,8 +205,6 @@ function updateSnake() {
 		Snake.grow();
 		makeFood();
 	}
-
-	Snake.move(SNAKE_DIR[0], SNAKE_DIR[1]);
 }
 
 function makeFood() {
@@ -226,22 +229,22 @@ window.onkeydown = function (e) {
 	switch (e.keyCode) {
 		case 38:
 			if (Snake.changedDir(0, 1)) {
-				SNAKE_DIR = [0, -1];
+				Snake.setDir(0, -1);;
 			}
 			break;
 		case 40:
 			if (Snake.changedDir(0, -1)) {
-				SNAKE_DIR = [0, 1];
+				Snake.setDir(0, 1);
 			}
 			break;
 		case 37:
 			if (Snake.changedDir(1, 0)) {
-				SNAKE_DIR = [-1, 0];
+				Snake.setDir(-1, 0);
 			}
 			break;
 		case 39:
 			if (Snake.changedDir(-1, 0)) {
-				SNAKE_DIR = [1, 0];
+				Snake.setDir(1, 0);
 			}
 			break;
 		case 71: // g - for growing
@@ -259,6 +262,7 @@ window.onkeydown = function (e) {
 		default:
 			break;
 	}
+	//Snake.move(Snake.direction[0], Snake.direction[1]);
 }
 
 var GameLoop = setInterval(gameLoop, 200);
