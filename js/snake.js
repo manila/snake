@@ -117,6 +117,18 @@ var Snake = {
 		} else {
 			//Snake.head().piece = SNAKE_HEAD;
 		}
+	},
+	checkCollison: function (x, y) {
+		for (let i = 0; i < this.body.length - 1; i++)
+		{
+			if (x == this.body[i].x && y == this.body[i].y)
+			{
+				return true;
+
+			}
+		}
+
+		return false;
 	}
 }
 
@@ -213,6 +225,10 @@ function updateSnake() {
 	}
 
 	Snake.willEat(FOOD.pos.x, FOOD.pos.y);
+
+	if (Snake.checkCollison(Snake.head().x, Snake.head().y)) {
+		alert("You ded");
+	}
 
 	if (Snake.head().x == FOOD.pos.x && Snake.head().y == FOOD.pos.y)
 	{
