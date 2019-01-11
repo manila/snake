@@ -11,16 +11,56 @@ const scaleMultiplier = 4;
 const canvasWidth = (gameWidth * scaleMultiplier) + gameWidth;
 const canvasHeight = (gameHeight * scaleMultiplier) + gameHeight;
 
-const NUMBERS = [[0,0,0,
-		  0,0,0,
-		  0,0,0,
-		  0,0,0,
-		  0,0,0],
+const NUMBERS = [[1,1,1,
+		  1,0,1,
+		  1,0,1,
+		  1,0,1,
+		  1,1,1],
 	         [0,1,0,
 		  1,1,0,
 		  0,1,0,
 		  0,1,0,
-		  0,1,0]];
+		  0,1,0],
+		 [1,1,1,
+		  0,0,1,
+		  1,1,1,
+		  1,0,0,
+		  1,1,1],
+		 [1,1,1,
+		  0,0,1,
+		  1,1,1,
+		  0,0,1,
+		  1,1,1],
+		 [1,0,1,
+		  1,0,1,
+		  1,1,1,
+		  0,0,1,
+		  0,0,1],
+		 [1,1,1,
+		  1,0,0,
+		  1,1,1,
+		  0,0,1,
+		  1,1,1],
+		 [1,1,1,
+		  1,0,0,
+		  1,1,1,
+		  1,0,1,
+		  1,1,1],
+		 [1,1,1,
+		  0,0,1,
+		  0,1,0,
+		  0,1,0,
+		  0,1,0],
+		 [1,1,1,
+		  1,0,1,
+		  1,1,1,
+		  1,0,1,
+		  1,1,1],
+		 [1,1,1,
+		  1,0,1,
+		  1,1,1,
+		  0,0,1,
+		  0,0,1]];
 
 const SNAKE_HEAD = [1, 0, 0, 0,
 		    0, 1, 1, 0,
@@ -54,9 +94,10 @@ const SNAKE_TAIL = [0, 0, 0, 0,
 		    1, 1, 1, 1,
 		    0, 0, 0, 0];
 
-const FOOD_PIECE = [0, 1, 0,
-	            1, 0, 1,
-	            0, 1, 0];
+const FOOD_PIECE = [0, 1, 0, 0,
+		    1, 0, 1, 0,
+	            0, 1, 0, 0,
+	            0, 0, 0, 0];
 
 var FOOD_PIECES = [[0, 0]];
 
@@ -183,7 +224,7 @@ function drawBitmap(x, y, width, height, bitmap, flipX, flipY) {
 	{
 		if (bitmap[i] == 1)
 		{
-			drawPixel((x * 4) + Math.floor(i % width), (y * 4) + Math.floor(i / height));
+			drawPixel((x * 4) + Math.floor((i % width)), (y * 4) + Math.floor(i / width));
 		}
 	}
 }
@@ -258,7 +299,12 @@ function gameLoop() {
 	updateSnake();
 	ctx.clearRect(0,0, canvasWidth, canvasHeight);
 	drawGame();
-	drawBitmap(FOOD.pos.x, FOOD.pos.y, 3, 3, FOOD_PIECE);
+	drawBitmap(FOOD.pos.x, FOOD.pos.y, 4, 4, FOOD_PIECE);
+	drawBitmap(1,1,3,5,NUMBERS[NUM++]);
+	if (NUM > 9)
+	{
+		NUM = 0;
+	}
 }
 
 window.onkeydown = function (e) {
@@ -304,5 +350,6 @@ window.onkeydown = function (e) {
 
 var GameLoop = setInterval(gameLoop, 300);
 var GAME_IS_PAUSED = false;
+var NUM = 0;
 
 makeFood();
