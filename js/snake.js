@@ -112,9 +112,7 @@ var Snake = {
 		{x: 2, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
 		{x: 3, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
 		{x: 4, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 5, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 6, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 7, y: 6, piece: SNAKE_HEAD, direction: [1, 0]}
+		{x: 5, y: 6, piece: SNAKE_HEAD, direction: [1, 0]}
 	],	
 	head: function () {
 		return this.body[this.body.length - 1];
@@ -213,7 +211,6 @@ function drawScore() {
 	drawBitmap(2, 0, 4, 5, NUMBERS[Math.floor(SCORE / 10) % 10]);
 	drawBitmap(3, 0, 4, 5, NUMBERS[SCORE % 10]);
 
-	SCORE++;
 	if (SCORE > 9999) {
 		SCORE = 0;
 	}
@@ -279,21 +276,30 @@ function updateSnake() {
 	if (Snake.head().x > 20) {
 		Snake.head().x = 0;
 	} else if (Snake.head().y > 11) {
-		Snake.head().y = 0;
+		Snake.head().y = 2;
 	} else if (Snake.head().x < 0) {
 		Snake.head().x = 20;
-	} else if (Snake.head().y < 0) {
+	} else if (Snake.head().y < 2) {
 		Snake.head().y = 11;
 	}
 
 	Snake.willEat(FOOD.pos.x, FOOD.pos.y);
 
 	if (Snake.checkCollison(Snake.head().x, Snake.head().y)) {
-		alert("You ded");
+		SCORE = 0;
+		Snake.body = [
+			{x: 0, y: 6, piece: SNAKE_TAIL, direction: [1, 0]}, 
+			{x: 1, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+			{x: 2, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+			{x: 3, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+			{x: 4, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+			{x: 5, y: 6, piece: SNAKE_HEAD, direction: [1, 0]}, 
+		];
 	}
 
 	if (Snake.head().x == FOOD.pos.x && Snake.head().y == FOOD.pos.y)
 	{
+		SCORE += 3;
 		Snake.body[Snake.body.length - 2].piece = SNAKE_FULL;
 		Snake.grow();
 		makeFood();
@@ -303,7 +309,7 @@ function updateSnake() {
 
 function makeFood() {
 	var foodX = Math.floor(Math.random() * 20);
-	var foodY = Math.floor(Math.random() * 12);
+	var foodY = Math.floor(Math.random() * 10) + 2;
 	FOOD = {pos: {x: foodX, y: foodY}, piece: FOOD_PIECE};
 }
 
@@ -355,7 +361,7 @@ window.onkeydown = function (e) {
 				clearInterval(GameLoop);
 				GAME_IS_PAUSED = true;
 			} else {
-				GameLoop = setInterval(gameLoop, 300);
+				GameLoop = setInterval(gameLoop, 200);
 				GAME_IS_PAUSED = false;
 			}
 		default:
@@ -364,8 +370,8 @@ window.onkeydown = function (e) {
 	//Snake.move(Snake.direction[0], Snake.direction[1]);
 }
 
-var SCORE = 42;
-var GameLoop = setInterval(gameLoop, 100);
+var SCORE = 0;
+var GameLoop = setInterval(gameLoop, 200);
 var GAME_IS_PAUSED = false;
 var NUM = 0;
 
