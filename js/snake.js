@@ -189,7 +189,7 @@ function drawGrid() {
 }
 
 function drawHorizontalLine(y) {
-	for (let x = 0; x < gameWidth - 1; x++)
+	for (let x = 0; x < gameWidth; x++)
 	{
 		drawPixel(x, y);
 	}
@@ -226,7 +226,7 @@ function drawPixel(x, y, color) {
 	} else {
 		ctx.fillStyle = "#222" //"rgba(0,0,0,0.7)";
 	}
-	ctx.shadowColor = "#b9c9b9" //"rgba(0,0,0,0.2)";
+	ctx.shadowColor = "#b4c4b4" //"rgba(0,0,0,0.2)";
 	ctx.shadowBlur = 0;
 	ctx.shadowOffsetX = 0.5;
 	ctx.shadowOffsetY = 0.5;
