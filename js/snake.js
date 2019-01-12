@@ -183,7 +183,7 @@ function drawGrid() {
 	{
 		for (h = 0; h < canvasHeight / scaleMultiplier; h++)
 		{
-			drawPixel(w, h, "rgba(0,0,0,0.1)");
+			drawPixel(w, h, "#b0c0b0" /*"rgba(0,0,0,0.1)"*/);
 		} 
 	}
 }
@@ -224,9 +224,9 @@ function drawPixel(x, y, color) {
 	if (color) {
 		ctx.fillStyle = color;
 	} else {
-		ctx.fillStyle = "rgba(0,0,0,0.7)";
+		ctx.fillStyle = "#222" //"rgba(0,0,0,0.7)";
 	}
-	ctx.shadowColor = "rgba(0,0,0,0.2)";
+	ctx.shadowColor = "#b9c9b9" //"rgba(0,0,0,0.2)";
 	ctx.shadowBlur = 0;
 	ctx.shadowOffsetX = 0.5;
 	ctx.shadowOffsetY = 0.5;
