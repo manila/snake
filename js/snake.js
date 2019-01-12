@@ -108,14 +108,14 @@ var FOOD = {};
 var Snake = {
 	direction: [1, 0],
 	body: [
-		{x: 0, y: 1, piece: SNAKE_TAIL, direction: [1, 0]}, 
-		{x: 1, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 2, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 3, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 4, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 5, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 6, y: 1, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 7, y: 1, piece: SNAKE_HEAD, direction: [1, 0]}
+		{x: 0, y: 6, piece: SNAKE_TAIL, direction: [1, 0]}, 
+		{x: 1, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 2, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 3, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 4, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 5, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 6, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
+		{x: 7, y: 6, piece: SNAKE_HEAD, direction: [1, 0]}
 	],	
 	head: function () {
 		return this.body[this.body.length - 1];
@@ -188,12 +188,19 @@ function drawGrid() {
 	}
 }
 
+function drawHorizontalLine(y) {
+	for (let x = 0; x < gameWidth - 1; x++)
+	{
+		drawPixel(x, y);
+	}
+}
+
 function drawOutline() {
 	for (w = 0; w < canvasWidth / scaleMultiplier; w++)
 	{
-		for (h = 0; h < canvasHeight / scaleMultiplier; h++)
+		for (h = 8; h < canvasHeight / scaleMultiplier; h++)
 		{
-			if (h == 0 || h == gameHeight - 1 || w == 0 || w == gameWidth -1)
+			if (h == 8 || h == gameHeight - 1 || w == 0 || w == gameWidth -1)
 			{
 				drawPixel(w, h);
 			}
@@ -202,11 +209,14 @@ function drawOutline() {
 }
 
 function drawScore() {
-	var tempScore = SCORE;
+	drawBitmap(0, 0, 3, 5, NUMBERS[Math.floor(SCORE / 1000) % 10]);
+	drawBitmap(1, 0, 3, 5, NUMBERS[Math.floor(SCORE / 100) % 10]);
+	drawBitmap(2, 0, 3, 5, NUMBERS[Math.floor(SCORE / 10) % 10]);
+	drawBitmap(3, 0, 3, 5, NUMBERS[SCORE % 10]);
 
-	for (let n = 0; n < 4; n++)
-	{
-		drawBitmap(n, 0, 3, 5, NUMBERS[n]);
+	SCORE++;
+	if (SCORE > 9999) {
+		SCORE = 0;
 	}
 }
 
@@ -256,6 +266,7 @@ function drawSnakePiece(x, y, part, direction) {
 
 function drawGame() {
 	drawGrid();
+	drawHorizontalLine(6);
 	drawOutline();
 	for (let i = 0; i < Snake.body.length; i++)
 	{
@@ -355,7 +366,7 @@ window.onkeydown = function (e) {
 }
 
 var SCORE = 42;
-var GameLoop = setInterval(gameLoop, 300);
+var GameLoop = setInterval(gameLoop, 100);
 var GAME_IS_PAUSED = false;
 var NUM = 0;
 
