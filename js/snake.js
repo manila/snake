@@ -202,6 +202,12 @@ function drawOutline() {
 }
 
 function drawScore() {
+	var tempScore = SCORE;
+
+	for (let n = 0; n < 4; n++)
+	{
+		drawBitmap(n, 0, 3, 5, NUMBERS[n]);
+	}
 }
 
 function drawPixel(x, y, color) {
@@ -300,7 +306,7 @@ function gameLoop() {
 	ctx.clearRect(0,0, canvasWidth, canvasHeight);
 	drawGame();
 	drawBitmap(FOOD.pos.x, FOOD.pos.y, 4, 4, FOOD_PIECE);
-	drawBitmap(1,1,3,5,NUMBERS[NUM++]);
+	drawScore();
 	if (NUM > 9)
 	{
 		NUM = 0;
@@ -348,6 +354,7 @@ window.onkeydown = function (e) {
 	//Snake.move(Snake.direction[0], Snake.direction[1]);
 }
 
+var SCORE = 42;
 var GameLoop = setInterval(gameLoop, 300);
 var GAME_IS_PAUSED = false;
 var NUM = 0;
