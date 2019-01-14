@@ -304,7 +304,6 @@ function updateSnake() {
 		Snake.grow();
 		makeFood();
 	}
-
 }
 
 function makeFood() {
@@ -361,17 +360,29 @@ window.onkeydown = function (e) {
 				clearInterval(GameLoop);
 				GAME_IS_PAUSED = true;
 			} else {
-				GameLoop = setInterval(gameLoop, 200);
+				GameLoop = setInterval(gameLoop, GAME_SPEED);
 				GAME_IS_PAUSED = false;
 			}
+			break;
+		case 83:
+			GAME_SPEED += 50;
+			clearInterval(GameLoop);
+			GameLoop = setInterval(gameLoop, GAME_SPEED);
+			break;
+		case 70:
+			GAME_SPEED -= 50;
+			clearInterval(GameLoop);
+			GameLoop = setInterval(gameLoop, GAME_SPEED);
+			break;
 		default:
 			break;
 	}
 	//Snake.move(Snake.direction[0], Snake.direction[1]);
 }
 
+var GAME_SPEED = 200;
 var SCORE = 0;
-var GameLoop = setInterval(gameLoop, 200);
+var GameLoop = setInterval(gameLoop, GAME_SPEED);
 var GAME_IS_PAUSED = false;
 var NUM = 0;
 
