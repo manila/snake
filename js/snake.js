@@ -1,6 +1,8 @@
 const canvas = document.getElementById("snake-game");
 const ctx = canvas.getContext("2d");
 
+var DISABLE_SHADOWS = true;
+
 const gameGridWidth = 21;
 const gameGridHeight = 12;
 const gameHeight = 48;
@@ -222,10 +224,13 @@ function drawPixel(x, y, color) {
 	} else {
 		ctx.fillStyle = "#222" //"rgba(0,0,0,0.7)";
 	}
-	ctx.shadowColor = "#b4c4b4" //"rgba(0,0,0,0.2)";
-	ctx.shadowBlur = 0;
-	ctx.shadowOffsetX = 0.5;
-	ctx.shadowOffsetY = 0.5;
+
+	if (DISABLE_SHADOWS) {
+		ctx.shadowColor = "#b4c4b4" //"rgba(0,0,0,0.2)";
+		ctx.shadowBlur = 0;
+		ctx.shadowOffsetX = 0.5;
+		ctx.shadowOffsetY = 0.5;
+	}
 
 	ctx.fillRect(x * (pixelPadding + scaleMultiplier), y * (scaleMultiplier + pixelPadding), scaleMultiplier, scaleMultiplier);
 }
