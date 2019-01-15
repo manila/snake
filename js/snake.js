@@ -225,7 +225,7 @@ function drawPixel(x, y, color) {
 		ctx.fillStyle = "#222" //"rgba(0,0,0,0.7)";
 	}
 
-	if (DISABLE_SHADOWS) {
+	if (!DISABLE_SHADOWS) {
 		ctx.shadowColor = "#b4c4b4" //"rgba(0,0,0,0.2)";
 		ctx.shadowBlur = 0;
 		ctx.shadowOffsetX = 0.5;
