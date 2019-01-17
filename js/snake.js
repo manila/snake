@@ -314,7 +314,15 @@ function updateSnake() {
 function makeFood() {
 	var foodX = Math.floor(Math.random() * 19);
 	var foodY = Math.floor(Math.random() * 9) + 2;
-	FOOD = {pos: {x: foodX, y: foodY}, piece: FOOD_PIECE};
+
+	if (!Snake.checkCollison(foodX, foodY))
+	{
+		FOOD = {pos: {x: foodX, y: foodY}, piece: FOOD_PIECE};
+	}
+	else
+	{
+		makeFood();
+	}
 }
 
 function generateBeets() {
