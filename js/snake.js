@@ -95,10 +95,9 @@ const SNAKE_TAIL = [0, 0, 0, 0,
 		    1, 1, 1, 1,
 		    0, 0, 0, 0];
 
-const FOOD_PIECE = [0, 1, 0, 0,
-		    1, 0, 1, 0,
-	            0, 1, 0, 0,
-	            0, 0, 0, 0];
+const FOOD_PIECE = [0, 1, 0,
+		    1, 0, 1,
+	            0, 1, 0];
 
 var FOOD_PIECES = [[0, 0]];
 
@@ -306,7 +305,7 @@ function updateSnake() {
 	if (Snake.head().x == FOOD.pos.x && Snake.head().y == FOOD.pos.y)
 	{
 		SCORE += 3;
-		Snake.body[Snake.body.length - 2].piece = SNAKE_FULL;
+		Snake.body[Snake.body.length - 1].piece = SNAKE_FULL;
 		Snake.grow();
 		makeFood();
 	}
@@ -326,7 +325,7 @@ function gameLoop() {
 	updateSnake();
 	ctx.clearRect(0,0, canvasWidth, canvasHeight);
 	drawGame();
-	drawBitmap(FOOD.pos.x, FOOD.pos.y, 4, 4, FOOD_PIECE, 2, 2);
+	drawBitmap(FOOD.pos.x, FOOD.pos.y, 3, 3, FOOD_PIECE, 2, 2);
 	drawScore();
 	if (NUM > 9)
 	{
