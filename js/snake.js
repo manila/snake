@@ -13,56 +13,56 @@ const scaleMultiplier = 4;
 const canvasWidth = (gameWidth * scaleMultiplier) + gameWidth;
 const canvasHeight = (gameHeight * scaleMultiplier) + gameHeight;
 
-const NUMBERS = [[0,1,1,1,
-		  0,1,0,1,
-		  0,1,0,1,
-		  0,1,0,1,
-		  0,1,1,1],
-	         [0,0,1,0,
-		  0,1,1,0,
-		  0,0,1,0,
-		  0,0,1,0,
-		  0,0,1,0],
-		 [0,1,1,1,
-		  0,0,0,1,
-		  0,1,1,1,
-		  0,1,0,0,
-		  0,1,1,1],
-		 [0,1,1,1,
-		  0,0,0,1,
-		  0,1,1,1,
-		  0,0,0,1,
-		  0,1,1,1],
-		 [0,1,0,1,
-		  0,1,0,1,
-		  0,1,1,1,
-		  0,0,0,1,
-		  0,0,0,1],
-		 [0,1,1,1,
-		  0,1,0,0,
-		  0,1,1,1,
-		  0,0,0,1,
-		  0,1,1,1],
-		 [0,1,1,1,
-		  0,1,0,0,
-		  0,1,1,1,
-		  0,1,0,1,
-		  0,1,1,1],
-		 [0,1,1,1,
-		  0,0,0,1,
-		  0,0,1,0,
-		  0,0,1,0,
-		  0,0,1,0],
-		 [0,1,1,1,
-		  0,1,0,1,
-		  0,1,1,1,
-		  0,1,0,1,
-		  0,1,1,1],
-		 [0,1,1,1,
-		  0,1,0,1,
-		  0,1,1,1,
-		  0,0,0,1,
-		  0,0,0,1]];
+const NUMBERS = [[1,1,1,
+		  1,0,1,
+		  1,0,1,
+		  1,0,1,
+		  1,1,1],
+	         [0,1,0,
+		  1,1,0,
+		  0,1,0,
+		  0,1,0,
+		  0,1,0],
+		 [1,1,1,
+		  0,0,1,
+		  1,1,1,
+		  1,0,0,
+		  1,1,1],
+		 [1,1,1,
+		  0,0,1,
+		  1,1,1,
+		  0,0,1,
+		  1,1,1],
+		 [1,0,1,
+		  1,0,1,
+		  1,1,1,
+		  0,0,1,
+		  0,0,1],
+		 [1,1,1,
+		  1,0,0,
+		  1,1,1,
+		  0,0,1,
+		  1,1,1],
+		 [1,1,1,
+		  1,0,0,
+		  1,1,1,
+		  1,0,1,
+		  1,1,1],
+		 [1,1,1,
+		  0,0,1,
+		  0,1,0,
+		  0,1,0,
+		  0,1,0],
+		 [1,1,1,
+		  1,0,1,
+		  1,1,1,
+		  1,0,1,
+		  1,1,1],
+		 [1,1,1,
+		  1,0,1,
+		  1,1,1,
+		  0,0,1,
+		  0,0,1]];
 
 const SNAKE_HEAD = [1, 0, 0, 0,
 		    0, 1, 1, 0,
@@ -182,7 +182,7 @@ function drawGrid() {
 	{
 		for (h = 0; h < canvasHeight / scaleMultiplier; h++)
 		{
-			drawPixel(w, h, "#b0c0b0" /*"rgba(0,0,0,0.1)"*/);
+			drawPixel(w, h, 0, 0, "#b0c0b0" /*"rgba(0,0,0,0.1)"*/);
 		} 
 	}
 }
@@ -190,7 +190,7 @@ function drawGrid() {
 function drawHorizontalLine(y) {
 	for (let x = 0; x < gameWidth; x++)
 	{
-		drawPixel(x, y);
+		drawPixel(x, y, 0, 0);
 	}
 }
 
@@ -201,24 +201,25 @@ function drawOutline() {
 		{
 			if (h == 8 || h == gameHeight - 1 || w == 0 || w == gameWidth -1)
 			{
-				drawPixel(w, h);
+				drawPixel(w, h, 0, 0);
 			}
 		}
 	}
 }
 
 function drawScore() {
-	drawBitmap(0, 0, 4, 5, NUMBERS[Math.floor(SCORE / 1000) % 10]);
-	drawBitmap(1, 0, 4, 5, NUMBERS[Math.floor(SCORE / 100) % 10]);
-	drawBitmap(2, 0, 4, 5, NUMBERS[Math.floor(SCORE / 10) % 10]);
-	drawBitmap(3, 0, 4, 5, NUMBERS[SCORE % 10]);
+	drawBitmap(0, 0, 3, 5, NUMBERS[Math.floor(SCORE / 1000) % 10], 1, 0);
+	drawBitmap(1, 0, 3, 5, NUMBERS[Math.floor(SCORE / 100) % 10], 1, 0);
+	drawBitmap(2, 0, 3, 5, NUMBERS[Math.floor(SCORE / 10) % 10], 1, 0);
+	drawBitmap(3, 0, 3, 5, NUMBERS[SCORE % 10], 1, 0);
 
 	if (SCORE > 9999) {
 		SCORE = 0;
 	}
 }
 
-function drawPixel(x, y, color) {
+function drawPixel(x, y, pixelOffSetX, pixelOffSetY, color) {
+
 	if (color) {
 		ctx.fillStyle = color;
 	} else {
@@ -232,16 +233,16 @@ function drawPixel(x, y, color) {
 		ctx.shadowOffsetY = 0.5;
 	}
 
-	ctx.fillRect(x * (pixelPadding + scaleMultiplier), y * (scaleMultiplier + pixelPadding), scaleMultiplier, scaleMultiplier);
+	ctx.fillRect((x + pixelOffSetX) * (pixelPadding + scaleMultiplier), (y + pixelOffSetY) * (scaleMultiplier + pixelPadding), scaleMultiplier, scaleMultiplier);
 }
 
-function drawBitmap(x, y, width, height, bitmap, flipX, flipY) {
-
+function drawBitmap(x, y, width, height, bitmap, pixelOffSetX, pixelOffSetY, flipX, flipY) {
+	
 	for (let i = 0; i < width*height; i++)
 	{
 		if (bitmap[i] == 1)
 		{
-			drawPixel((x * 4) + Math.floor((i % width)), (y * 4) + Math.floor(i / width));
+			drawPixel((x * 4) + Math.floor((i % width)), (y * 4) + Math.floor(i / width), pixelOffSetX, pixelOffSetY);
 		}
 	}
 }
@@ -253,13 +254,13 @@ function drawSnakePiece(x, y, part, direction) {
 		if (part[i] == 1)
 		{
 			if (direction[1] == -1) {
-				drawPixel((x * 4) + Math.floor((i) / 4), (y * 4) + Math.floor((15 - i) % 4));
+				drawPixel((x * 4) + Math.floor((i) / 4), (y * 4) + Math.floor((15 - i) % 4), 2, 2);
 			} else if (direction[0] == -1) {
-				drawPixel((x * 4) + Math.floor((15 - i) % 4), (y * 4) + Math.floor(i / 4));
+				drawPixel((x * 4) + Math.floor((15 - i) % 4), (y * 4) + Math.floor(i / 4), 2, 2);
 			} else if (direction[1] == 1) {
-				drawPixel((x * 4) + Math.floor((15 - i) / 4), (y * 4) + Math.floor((i) % 4));
+				drawPixel((x * 4) + Math.floor((15 - i) / 4), (y * 4) + Math.floor((i) % 4), 2, 2);
 			} else {
-				drawPixel((x * 4) + Math.floor(i % 4), (y * 4) + Math.floor(i / 4));
+				drawPixel((x * 4) + Math.floor(i % 4), (y * 4) + Math.floor(i / 4), 2, 2);
 			}
 		}
 	}
@@ -278,14 +279,14 @@ function drawGame() {
 function updateSnake() {
 	Snake.move(Snake.direction[0], Snake.direction[1]);
 
-	if (Snake.head().x > 20) {
+	if (Snake.head().x > 19) {
 		Snake.head().x = 0;
-	} else if (Snake.head().y > 11) {
+	} else if (Snake.head().y > 10) {
 		Snake.head().y = 2;
 	} else if (Snake.head().x < 0) {
-		Snake.head().x = 20;
+		Snake.head().x = 19;
 	} else if (Snake.head().y < 2) {
-		Snake.head().y = 11;
+		Snake.head().y = 10;
 	}
 
 	Snake.willEat(FOOD.pos.x, FOOD.pos.y);
@@ -312,8 +313,8 @@ function updateSnake() {
 }
 
 function makeFood() {
-	var foodX = Math.floor(Math.random() * 20);
-	var foodY = Math.floor(Math.random() * 10) + 2;
+	var foodX = Math.floor(Math.random() * 19);
+	var foodY = Math.floor(Math.random() * 9) + 2;
 	FOOD = {pos: {x: foodX, y: foodY}, piece: FOOD_PIECE};
 }
 
@@ -325,7 +326,7 @@ function gameLoop() {
 	updateSnake();
 	ctx.clearRect(0,0, canvasWidth, canvasHeight);
 	drawGame();
-	drawBitmap(FOOD.pos.x, FOOD.pos.y, 4, 4, FOOD_PIECE);
+	drawBitmap(FOOD.pos.x, FOOD.pos.y, 4, 4, FOOD_PIECE, 2, 2);
 	drawScore();
 	if (NUM > 9)
 	{
