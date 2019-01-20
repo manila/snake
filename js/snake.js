@@ -265,7 +265,13 @@ function drawSnakePiece(x, y, part, direction) {
 	}
 }
 
+function drawBackground() {
+	ctx.fillStyle = "#bcb";
+	ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+}
+
 function drawGame() {
+	drawBackground();
 	drawGrid();
 	drawHorizontalLine(6);
 	drawOutline();
