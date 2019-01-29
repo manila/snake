@@ -105,10 +105,21 @@ var SNAKE_DIR = [1, 0];
 
 var FOOD = {};
 
+class snakeBody {
+	constuctor(x, y, piece, direction) {
+		this.x = x;
+		this.y = y;
+		this.piece = piece;
+		this.direction = direction;
+	}
+}
+
+console.log(new snakeBody(0, 0, SNAKE_HEAD, [1, 1]));
+
 var Snake = {
 	direction: [1, 0],
 	body: [
-		{x: 0, y: 6, piece: SNAKE_TAIL, direction: [1, 0]}, 
+		new snakeBody(0, 6, SNAKE_TAIL, [1, 0]), 
 		{x: 1, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
 		{x: 2, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
 		{x: 3, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
@@ -122,7 +133,7 @@ var Snake = {
 		return this.body[0];
 	},
 	grow: function () {
-		return this.body.unshift({x: this.head().x, y: this.head().y, piece: SNAKE_HEAD, direction: this.direction});
+		return this.body.unshift(new snakeBody(this.head().x, this.head().y, SNAKE_HEAD, this.direction));
 	},
 	move: function (directionX, directionY) {
 		if (this.changedDir(directionX, directionY)) {
@@ -136,7 +147,13 @@ var Snake = {
 				this.head().piece = SNAKE_BODY;
 			}
 		}
-		this.body.push({x: this.head().x + directionX, y: this.head().y + directionY, piece: SNAKE_HEAD, direction: this.direction});
+		this.body.push(new snakeBody(
+					this.head().x + directionX, 
+					this.head().y + directionY, 
+					SNAKE_HEAD, 
+					this.direction
+					)
+				);
 		this.body.shift();
 		this.tail().piece = SNAKE_TAIL;
 		this.direction = [directionX, directionY];
