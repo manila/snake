@@ -112,19 +112,22 @@ class snakeBody {
 		this.piece = piece;
 		this.direction = direction;
 	}
+	draw () {
+		drawBitmap(this.x, this.y, this.piece);
+	}
 }
 
-console.log(new snakeBody(0, 0, SNAKE_HEAD, [1, 1]));
+var snakeTest = new snakeBody(0, 0, SNAKE_HEAD, [1, 1]);
+
+console.log(snakeTest);
 
 var Snake = {
 	direction: [1, 0],
 	body: [
-		new snakeBody(0, 6, SNAKE_TAIL, [1, 0]), 
-		{x: 1, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 2, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 3, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 4, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-		{x: 5, y: 6, piece: SNAKE_HEAD, direction: [1, 0]}
+		new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
+		new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
+		new snakeBody(3, 6, SNAKE_BODY, [1, 0]), 
+		new snakeBody(4, 6, SNAKE_HEAD, [1, 0]), 
 	],	
 	head: function () {
 		return this.body[this.body.length - 1];
@@ -163,6 +166,7 @@ var Snake = {
 		this.direction[1] = directionY;
 	},
 	changedDir: function (directionX, directionY) {
+		/*
 		if (this.body[Snake.body.length - 2].direction[0] == directionX && this.body[Snake.body.length - 2].direction[1] == directionY)
 		{
 			return false;
@@ -171,6 +175,7 @@ var Snake = {
 		{
 			return true;
 		}
+		*/
 	},
 	willEat: function (foodX, foodY) {
 		if (Snake.head().x + (Snake.direction[0]) == foodX && Snake.head().y + (Snake.direction[1]) == foodY) {
@@ -294,7 +299,8 @@ function drawGame() {
 	drawOutline();
 	for (let i = 0; i < Snake.body.length; i++)
 	{
-		drawSnakePiece(Snake.body[i].x, Snake.body[i].y, Snake.body[i].piece, Snake.body[i].direction);
+		Snake.body[i].draw();
+		//drawSnakePiece(Snake.body[i].x, Snake.body[i].y, Snake.body[i].piece, Snake.body[i].direction);
 	}
 }
 
