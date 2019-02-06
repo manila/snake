@@ -112,8 +112,9 @@ class snakeBody {
 		this.piece = piece;
 		this.direction = direction;
 	}
-	draw () {
-		drawBitmap(this.x, this.y, this.piece);
+
+	draw() {
+		drawSnakePiece(this.x, this.y, this.piece, this.direction);
 	}
 }
 
@@ -121,13 +122,15 @@ var snakeTest = new snakeBody(0, 0, SNAKE_HEAD, [1, 1]);
 
 console.log(snakeTest);
 
+snakeTest.draw();
+
 var Snake = {
 	direction: [1, 0],
 	body: [
 		new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
 		new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
 		new snakeBody(3, 6, SNAKE_BODY, [1, 0]), 
-		new snakeBody(4, 6, SNAKE_HEAD, [1, 0]), 
+		new snakeBody(4, 6, SNAKE_HEAD, [1, 0]) 
 	],	
 	head: function () {
 		return this.body[this.body.length - 1];
@@ -299,7 +302,8 @@ function drawGame() {
 	drawOutline();
 	for (let i = 0; i < Snake.body.length; i++)
 	{
-		Snake.body[i].draw();
+		//Snake.body[i].draw();
+		//console.log(Snake.body);
 		//drawSnakePiece(Snake.body[i].x, Snake.body[i].y, Snake.body[i].piece, Snake.body[i].direction);
 	}
 }
