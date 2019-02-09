@@ -326,12 +326,10 @@ function updateSnake() {
 	if (Snake.checkCollison(Snake.head().x, Snake.head().y)) {
 		SCORE = 0;
 		Snake.body = [
-			{x: 0, y: 6, piece: SNAKE_TAIL, direction: [1, 0]}, 
-			{x: 1, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-			{x: 2, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-			{x: 3, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-			{x: 4, y: 6, piece: SNAKE_BODY, direction: [1, 0]}, 
-			{x: 5, y: 6, piece: SNAKE_HEAD, direction: [1, 0]}, 
+			new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
+			new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
+			new snakeBody(3, 6, SNAKE_BODY, [1, 0]), 
+			new snakeBody(4, 6, SNAKE_HEAD, [1, 0]) 
 		];
 	}
 
