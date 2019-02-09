@@ -125,7 +125,7 @@ class snakeBody {
 var snakeTest = new snakeBody(0, 0, SNAKE_HEAD, [1, 1]);
 
 var Snake = {
-	direction: [1, 0],
+	direction: [0, 0],
 	body: [
 		new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
 		new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
@@ -325,6 +325,7 @@ function updateSnake() {
 
 	if (Snake.checkCollison(Snake.head().x, Snake.head().y)) {
 		SCORE = 0;
+		Snake.direction = [0, 0];
 		Snake.body = [
 			new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
 			new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
