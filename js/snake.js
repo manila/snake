@@ -125,7 +125,7 @@ class snakeBody {
 var snakeTest = new snakeBody(0, 0, SNAKE_HEAD, [1, 1]);
 
 var Snake = {
-	direction: [0, 0],
+	direction: [1, 0],
 	body: [
 		new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
 		new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
@@ -133,10 +133,24 @@ var Snake = {
 		new snakeBody(4, 6, SNAKE_HEAD, [1, 0]) 
 	],	
 	head: function () {
-		return this.body[this.body.length - 1];
+		if (this.body.length > 2)
+		{
+			return this.body[this.body.length - 1];
+		}
+		else
+		{
+			return [];
+		}
 	},
 	tail: function () {
-		return this.body[0];
+		if (this.body.length > 2)
+		{
+			return this.body[0];
+		}
+		else
+		{
+			return [];
+		}
 	},
 	grow: function () {
 		return this.body.unshift(new snakeBody(this.head().x, this.head().y, SNAKE_HEAD, this.direction));
@@ -170,13 +184,20 @@ var Snake = {
 	},
 	changedDir: function (directionX, directionY) {
 		
-		if (this.body[Snake.body.length - 2].direction[0] == directionX && this.body[Snake.body.length - 2].direction[1] == directionY)
+		if (this.body.length > 2)
 		{
-			return false;
+			if (this.body[Snake.body.length - 2].direction[0] == directionX && this.body[Snake.body.length - 2].direction[1] == directionY)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
 		}
 		else
 		{
-			return true;
+			return false;
 		}
 		
 	},
@@ -326,12 +347,17 @@ function updateSnake() {
 	if (Snake.checkCollison(Snake.head().x, Snake.head().y)) {
 		SCORE = 0;
 		Snake.direction = [0, 0];
+		blinkSnake();
+		//console.log("called");	
+		/*
 		Snake.body = [
 			new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
 			new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
 			new snakeBody(3, 6, SNAKE_BODY, [1, 0]), 
 			new snakeBody(4, 6, SNAKE_HEAD, [1, 0]) 
 		];
+		*/
+		
 	}
 
 	if (Snake.head().x == FOOD.pos.x && Snake.head().y == FOOD.pos.y)
@@ -341,6 +367,25 @@ function updateSnake() {
 		Snake.grow();
 		makeFood();
 	}
+}
+
+function blinkSnake() {
+	var blinkCount = 0;
+	var tempSnakeBody = Snake.body;
+	Snake.direction = [0, 0];
+	var snakeBlinkInterval = setInterval(function () {
+
+		if (blinkCount % 2 == 0) {
+			Snake.body = [];
+		} else if (blinkCount < 5) {
+			Snake.body = tempSnakeBody;
+		} else {
+			clearInterval(snakeBlinkInterval);
+		}
+
+		blinkCount++;
+		
+	}, 200);
 }
 
 function makeFood() {
