@@ -293,19 +293,20 @@ function drawBitmap(x, y, width, height, bitmap, pixelOffSetX, pixelOffSetY, fli
 }
 
 function drawSnakePiece(x, y, part, direction) {
-
-	for (let i = 0; i < 16; i++)
-	{
-		if (part[i] == 1)
+	if (DRAW_SNAKE) {
+		for (let i = 0; i < 16; i++)
 		{
-			if (direction[1] == -1) {
-				drawPixel((x * 4) + Math.floor((i) / 4), (y * 4) + Math.floor((15 - i) % 4), 2, 2);
-			} else if (direction[0] == -1) {
-				drawPixel((x * 4) + Math.floor((15 - i) % 4), (y * 4) + Math.floor(i / 4), 2, 2);
-			} else if (direction[1] == 1) {
-				drawPixel((x * 4) + Math.floor((15 - i) / 4), (y * 4) + Math.floor((i) % 4), 2, 2);
-			} else {
-				drawPixel((x * 4) + Math.floor(i % 4), (y * 4) + Math.floor(i / 4), 2, 2);
+			if (part[i] == 1)
+			{
+				if (direction[1] == -1) {
+					drawPixel((x * 4) + Math.floor((i) / 4), (y * 4) + Math.floor((15 - i) % 4), 2, 2);
+				} else if (direction[0] == -1) {
+					drawPixel((x * 4) + Math.floor((15 - i) % 4), (y * 4) + Math.floor(i / 4), 2, 2);
+				} else if (direction[1] == 1) {
+					drawPixel((x * 4) + Math.floor((15 - i) / 4), (y * 4) + Math.floor((i) % 4), 2, 2);
+				} else {
+					drawPixel((x * 4) + Math.floor(i % 4), (y * 4) + Math.floor(i / 4), 2, 2);
+				}
 			}
 		}
 	}
@@ -376,9 +377,9 @@ function blinkSnake() {
 	var snakeBlinkInterval = setInterval(function () {
 
 		if (blinkCount % 2 == 0) {
-			Snake.body = [];
+			DRAW_SNAKE = false;
 		} else if (blinkCount < 5) {
-			Snake.body = tempSnakeBody;
+			DRAW_SNAKE = true;
 		} else {
 			clearInterval(snakeBlinkInterval);
 		}
@@ -471,6 +472,7 @@ window.onkeydown = function (e) {
 }
 
 var GAME_SPEED = 200;
+var DRAW_SNAKE = true;
 var SCORE = 0;
 var GameLoop = setInterval(gameLoop, GAME_SPEED);
 var GAME_IS_PAUSED = false;
