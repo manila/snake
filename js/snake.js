@@ -331,21 +331,7 @@ function drawGame() {
 }
 
 function updateSnake() {
-	Snake.move(Snake.direction[0], Snake.direction[1]);
-
-	if (Snake.head().x > 19) {
-		Snake.head().x = 0;
-	} else if (Snake.head().y > 10) {
-		Snake.head().y = 2;
-	} else if (Snake.head().x < 0) {
-		Snake.head().x = 19;
-	} else if (Snake.head().y < 2) {
-		Snake.head().y = 10;
-	}
-
-	Snake.willEat(FOOD.pos.x, FOOD.pos.y);
-
-	if (Snake.checkCollison(Snake.head().x, Snake.head().y)) {
+	if (Snake.checkCollison(Snake.head().x + Snake.direction[0], Snake.head().y + Snake.direction[1])) {
 		SCORE = 0;
 		Snake.direction = [0, 0];
 		blinkSnake();
@@ -361,6 +347,24 @@ function updateSnake() {
 		
 	}
 
+	if (Snake.direction[0] != 0 || Snake.direction[1] != 0)
+	{
+		Snake.move(Snake.direction[0], Snake.direction[1]);
+	}
+
+	if (Snake.head().x > 19) {
+		Snake.head().x = 0;
+	} else if (Snake.head().y > 10) {
+		Snake.head().y = 2;
+	} else if (Snake.head().x < 0) {
+		Snake.head().x = 19;
+	} else if (Snake.head().y < 2) {
+		Snake.head().y = 10;
+	}
+
+	Snake.willEat(FOOD.pos.x, FOOD.pos.y);
+
+	
 	if (Snake.head().x == FOOD.pos.x && Snake.head().y == FOOD.pos.y)
 	{
 		SCORE += 3;
@@ -378,9 +382,11 @@ function blinkSnake() {
 
 		if (blinkCount % 2 == 0) {
 			DRAW_SNAKE = false;
-		} else if (blinkCount < 5) {
-			DRAW_SNAKE = true;
 		} else {
+			DRAW_SNAKE = true;
+		} 
+		
+		if (blinkCount > 9) {
 			clearInterval(snakeBlinkInterval);
 		}
 
