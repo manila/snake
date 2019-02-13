@@ -374,6 +374,17 @@ function updateSnake() {
 	}
 }
 
+function resetSnake() {
+	DRAW_SNAKE = true;
+	Snake.body = [
+		new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
+		new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
+		new snakeBody(3, 6, SNAKE_BODY, [1, 0]), 
+		new snakeBody(4, 6, SNAKE_HEAD, [1, 0]) 
+	];
+
+}
+
 function blinkSnake() {
 	var blinkCount = 0;
 	var tempSnakeBody = Snake.body;
@@ -388,6 +399,7 @@ function blinkSnake() {
 		
 		if (blinkCount > 9) {
 			clearInterval(snakeBlinkInterval);
+			resetSnake();
 		}
 
 		blinkCount++;
