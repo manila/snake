@@ -122,8 +122,6 @@ class snakeBody {
 	}
 }
 
-var snakeTest = new snakeBody(0, 0, SNAKE_HEAD, [1, 1]);
-
 var Snake = {
 	direction: [1, 0],
 	body: [
