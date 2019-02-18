@@ -438,22 +438,22 @@ function gameLoop() {
 window.onkeydown = function (e) {
 	console.log(e.keyCode);
 	switch (e.keyCode) {
-		case 38:
+		case 38: // down arrow
 			if (Snake.changedDir(0, 1)) {
 				Snake.setDir(0, -1);;
 			}
 			break;
-		case 40:
+		case 40: // up arrow
 			if (Snake.changedDir(0, -1)) {
 				Snake.setDir(0, 1);
 			}
 			break;
-		case 37:
+		case 37: // left arrow
 			if (Snake.changedDir(1, 0)) {
 				Snake.setDir(-1, 0);
 			}
 			break;
-		case 39:
+		case 39: // right arrow
 			if (Snake.changedDir(-1, 0)) {
 				Snake.setDir(1, 0);
 			}
