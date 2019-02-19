@@ -99,6 +99,9 @@ const FOOD_PIECE = [0, 1, 0,
 		    1, 0, 1,
 	            0, 1, 0];
 
+const Game = {
+};
+
 var FOOD_PIECES = [[0, 0]];
 
 var SNAKE_DIR = [1, 0];
