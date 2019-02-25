@@ -1,5 +1,5 @@
 # snake
-A clone of the game snake
+A clone of the game snake II
 
 WORK IN PROGRESS
 
