@@ -333,7 +333,6 @@ function drawGame() {
 
 function updateSnake() {
 	if (Snake.checkCollison(Snake.head().x + Snake.direction[0], Snake.head().y + Snake.direction[1])) {
-		SCORE = 0;
 		Snake.direction = [0, 0];
 		blinkSnake();
 		//console.log("called");	
@@ -345,6 +344,8 @@ function updateSnake() {
 			new snakeBody(4, 6, SNAKE_HEAD, [1, 0]) 
 		];
 		*/
+
+		SCORE = 0;
 		
 	}
 
