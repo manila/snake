@@ -13,6 +13,7 @@ const scaleMultiplier = 4;
 const canvasWidth = (gameWidth * scaleMultiplier) + gameWidth;
 const canvasHeight = (gameHeight * scaleMultiplier) + gameHeight;
 
+/* Bitmap numbers */
 const NUMBERS = [[1,1,1,
 		  1,0,1,
 		  1,0,1,
@@ -64,11 +65,13 @@ const NUMBERS = [[1,1,1,
 		  0,0,1,
 		  0,0,1]];
 
+/* Snake head bitmap */
 const SNAKE_HEAD = [1, 0, 0, 0,
 		    0, 1, 1, 0,
 		    1, 1, 1, 0,
 	    	    0, 0, 0, 0];
 
+/* Open mouth snake bitmap */
 const SNAKE_EAT = [1, 0, 1, 0,
 		    0, 1, 0, 0,
 		    1, 1, 0, 0,
