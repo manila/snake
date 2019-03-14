@@ -111,6 +111,7 @@ var SNAKE_DIR = [1, 0];
 
 var FOOD = {};
 
+/* Snake body object, these are the pieces that make up the whole snake */
 class snakeBody {
 	constructor(x, y, piece, direction) {
 		this.x = x;
@@ -128,6 +129,7 @@ class snakeBody {
 	}
 }
 
+/* Snake object, this is the whole snake made up of snakeBody objects */
 var Snake = {
 	direction: [1, 0],
 	body: [
