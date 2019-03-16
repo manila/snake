@@ -412,7 +412,7 @@ function blinkSnake() {
 
 		blinkCount++;
 		
-	}, 200);
+	}, GAME_SPEED);
 }
 
 function makeFood() {
