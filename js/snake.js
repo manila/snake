@@ -98,6 +98,7 @@ const SNAKE_TAIL = [0, 0, 0, 0,
 		    1, 1, 1, 1,
 		    0, 0, 0, 0];
 
+/* bitmap for food piece/apple */
 const FOOD_PIECE = [0, 1, 0,
 		    1, 0, 1,
 	            0, 1, 0];
