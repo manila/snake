@@ -415,6 +415,7 @@ function blinkSnake() {
 	}, GAME_SPEED);
 }
 
+// Generate an apple somwhere randomly on the board
 function makeFood() {
 	var foodX = Math.floor(Math.random() * 19);
 	var foodY = Math.floor(Math.random() * 9) + 2;
