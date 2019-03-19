@@ -246,6 +246,7 @@ function drawHorizontalLine(y) {
 	}
 }
 
+/* draw the outline of a box around the playable area */
 function drawOutline() {
 	for (w = 0; w < canvasWidth / scaleMultiplier; w++)
 	{
@@ -319,7 +320,7 @@ function drawSnakePiece(x, y, part, direction) {
 	}
 }
 
-// Fill canvas with a solid color rectangle AKA background
+/* Fill canvas with a solid color rectangle AKA background */
 function drawBackground() {
 	ctx.fillStyle = "#bcb";
 	ctx.fillRect(0, 0, canvasWidth, canvasHeight);
