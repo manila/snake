@@ -99,7 +99,7 @@ const SNAKE_TAIL = [0, 0, 0, 0,
 		    0, 0, 0, 0];
 
 /* bitmap for food piece/apple */
-const FOOD_PIECE = [0, 1, 0,
+const FOOD_PIECE = [1, 1, 0,
 		    1, 0, 1,
 	            0, 1, 0];
 
@@ -291,21 +291,33 @@ function drawPixel(x, y, pixelOffSetX, pixelOffSetY, color) {
 
 function drawBitmap(x, y, width, height, bitmap, pixelOffSetX, pixelOffSetY, flipX, flipY) {
 	
+	flipX = flipX || 0;
+	flipY = flipY || 0;
+
 	for (let i = 0; i < width*height; i++)
 	{
 		if (bitmap[i] == 1)
 		{
-			drawPixel((x * 4) + Math.floor((i % width)), (y * 4) + Math.floor(i / width), pixelOffSetX, pixelOffSetY);
+			drawPixel(
+				(x * 4) + Math.abs(Math.floor(i % width) - (flipX * width)),
+				(y * 4) + Math.abs(Math.floor(i / width) - (flipY * height)), 
+				pixelOffSetX, 
+				pixelOffSetY);
 		}
 	}
 }
 
 function drawSnakePiece(x, y, part, direction) {
+	
+	drawBitmap(x, y, 4, 4, part, 2, 2, 0, 0);
+
+	/*
 	if (DRAW_SNAKE) {
 		for (let i = 0; i < 16; i++)
 		{
 			if (part[i] == 1)
 			{
+
 				if (direction[1] == -1) {
 					drawPixel((x * 4) + Math.floor((i) / 4), (y * 4) + Math.floor((15 - i) % 4), 2, 2);
 				} else if (direction[0] == -1) {
@@ -318,6 +330,7 @@ function drawSnakePiece(x, y, part, direction) {
 			}
 		}
 	}
+	*/
 }
 
 /* Fill canvas with a solid color rectangle AKA background */
@@ -440,7 +453,7 @@ function gameLoop() {
 	updateSnake();
 	ctx.clearRect(0,0, canvasWidth, canvasHeight);
 	drawGame();
-	drawBitmap(FOOD.pos.x, FOOD.pos.y, 3, 3, FOOD_PIECE, 2, 2);
+	drawBitmap(FOOD.pos.x, FOOD.pos.y, 3, 3, FOOD_PIECE, 2, 2, 1);
 	drawScore();
 	if (NUM > 9)
 	{
