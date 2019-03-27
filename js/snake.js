@@ -103,7 +103,33 @@ const FOOD_PIECE = [0, 0, 0,
 		    0, 0, 0,
 	            1, 1, 1];
 
-const Game = {
+class Game {
+	constructor(canvasElem) {
+		this.canvas = canvasElem;
+		this.ctx = canvasElem.getContext("2d");
+		this.gameGridWidth = 21;
+		this.gameGridHeight = 12;
+		this.gameHeight = 48;
+		this.gameWidth = 84;
+		this.pixelPadding = 1;
+		this.scaleMultiplier = 4;
+
+		this.canvasWidth = (gameWidth * scaleMultiplier) + gameWidth;
+		this.canvasHeight = (gameHeight * scaleMultiplier) + gameHeight;
+		
+		this.foodPieced = [[0 , 0]];
+		this.food = {};
+
+		this.score = 0;
+	}
+
+	function draw() {
+
+	}
+
+	function drawBackground() {
+
+	}
 };
 
 var FOOD_PIECES = [[0, 0]];
@@ -455,7 +481,7 @@ function generateBeets() {
 	FOOD_PIECES.push({x: 0, y: 0});
 }
 
-function gameLoop() {
+function gameLoop(gameObj) {
 	updateSnake();
 	ctx.clearRect(0,0, canvasWidth, canvasHeight);
 	drawGame();
@@ -517,6 +543,15 @@ window.onkeydown = function (e) {
 			break;
 	}
 	//Snake.move(Snake.direction[0], Snake.direction[1]);
+}
+
+function setupGame() {
+	var game = new Game(document.getElementById("snake-game"));
+
+
+
+	game.makeFood();
+	
 }
 
 var GAME_SPEED = 200;
