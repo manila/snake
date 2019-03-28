@@ -429,6 +429,7 @@ function updateSnake() {
 	}
 }
 
+/* Delete snake and make a new one */
 function resetSnake() {
 	DRAW_SNAKE = true;
 	Snake.body = [
