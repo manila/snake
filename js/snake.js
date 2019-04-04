@@ -123,6 +123,7 @@ class Game {
 		this.score = 0;
 	}
 
+	/*
 	function draw() {
 
 	}
@@ -130,6 +131,7 @@ class Game {
 	function drawBackground() {
 
 	}
+	*/
 };
 
 var FOOD_PIECES = [[0, 0]];
