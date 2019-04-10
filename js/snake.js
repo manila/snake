@@ -66,26 +66,64 @@ const NUMBERS = [[1,1,1,
 		  0,0,1]];
 
 /* Snake head bitmap */
-const SNAKE_HEAD = [1, 0, 0, 0,
-		    0, 1, 1, 0,
-		    1, 1, 1, 0,
-	    	    0, 0, 0, 0];
+const SNAKE_HEAD = [[[1, 0, 0, 0,
+		      0, 1, 1, 0,
+		      1, 1, 1, 0,
+	    	      0, 0, 0, 0],
+		     [0, 0, 0, 1,
+		      0, 1, 1, 0,
+		      0, 1, 1, 1,
+	    	      0, 0, 0, 0]],
+		    [[0, 0, 0, 0,
+		      0, 1, 1, 0,
+		      0, 1, 1, 0,
+	    	      1, 0, 1, 0],
+		     [1, 0, 1, 0,
+		      0, 1, 1, 0,
+		      0, 1, 1, 0,
+	    	      0, 0, 0, 0]]];
+
 
 /* Open mouth snake bitmap */
 const SNAKE_EAT = [1, 0, 1, 0,
-		    0, 1, 0, 0,
-		    1, 1, 0, 0,
-	    	    0, 0, 1, 0];
+		   0, 1, 0, 0,
+		   1, 1, 0, 0,
+	    	   0, 0, 1, 0];
 
-const SNAKE_BODY = [0, 0, 0, 0,
-		    1, 1, 0, 1,
-		    1, 0, 1, 1,
-		    0, 0, 0, 0];
+const SNAKE_BODY = [[[0, 0, 0, 0,
+		     1, 1, 0, 1,
+		     1, 0, 1, 1,
+		     0, 0, 0, 0],
+		    [0, 0, 0, 0,
+		     1, 0, 1, 1,
+		     1, 1, 0, 1,
+		     0, 0, 0, 0]],
+		   [[0, 1, 1, 0,
+		     0, 0, 1, 0,
+		     0, 1, 0, 0,
+		     0, 1, 1, 0],
+		    [0, 1, 1, 0,
+		     0, 1, 0, 0,
+		     0, 0, 1, 0,
+		     0, 1, 1, 0]]];
 
-const SNAKE_TURN = [0, 0, 0, 0,
-		    0, 0, 1, 1,
-		    0, 1, 0, 1,
-		    0, 1, 1, 0];
+
+const SNAKE_TURN = [[[0, 1, 1, 0,
+		      1, 0, 1, 0,
+		      1, 1, 0, 0,
+		      0, 0, 0, 0],
+		     [0, 1, 1, 0,
+		      1, 0, 1, 1,
+		      1, 1, 0, 1,
+		      0, 1, 1, 0]],
+		    [[0, 1, 1, 0,
+		      1, 0, 1, 1,
+		      1, 1, 0, 1,
+		      0, 1, 1, 0], 
+		     [0, 0, 0, 0,
+		      1, 1, 0, 0,
+		      1, 0, 1, 0,
+		      0, 1, 1, 0]]];
 
 
 const SNAKE_FULL = [0, 1, 1, 0,
@@ -93,15 +131,27 @@ const SNAKE_FULL = [0, 1, 1, 0,
 		    1, 0, 1, 1,
 		    0, 1, 1, 0];
 
-const SNAKE_TAIL = [0, 0, 0, 0,
-		    0, 0, 1, 1,
-		    1, 1, 1, 1,
-		    0, 0, 0, 0];
+const SNAKE_TAIL = [[[0, 0, 0, 0,
+		      0, 0, 1, 1,
+		      1, 1, 1, 1,
+		      0, 0, 0, 0],
+		     [0, 0, 0, 0,
+		      1, 1, 0, 0,
+		      1, 1, 1, 1,
+		      0, 0, 0, 0]],
+		    [[0, 1, 1, 0,
+		      0, 1, 1, 0,
+		      0, 0, 1, 0,
+		      0, 0, 1, 0],
+		     [0, 0, 1, 0,
+		      0, 0, 1, 0,
+		      0, 1, 1, 0,
+		      0, 1, 1, 0]]];
 
 /* bitmap for food piece/apple */
-const FOOD_PIECE = [0, 0, 0,
-		    0, 0, 0,
-	            1, 1, 1];
+const FOOD_PIECE = [0, 1, 0,
+		    1, 0, 1,
+	            0, 1, 0];
 
 class Game {
 	constructor(canvasElem) {
@@ -165,7 +215,7 @@ var Snake = {
 		new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
 		new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
 		new snakeBody(3, 6, SNAKE_BODY, [1, 0]), 
-		new snakeBody(4, 6, SNAKE_HEAD, [1, 0]) 
+		new snakeBody(4, 6, SNAKE_HEAD[0][0], [1, 0]) 
 	],	
 	head: function () {
 		if (this.body.length > 2)
@@ -192,25 +242,25 @@ var Snake = {
 	},
 	move: function (directionX, directionY) {
 		if (this.changedDir(directionX, directionY)) {
-			this.head().piece = SNAKE_TURN;
+			this.head().piece = SNAKE_TURN[(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)][(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)];
 			this.head().setDir(directionX, directionY);
 		}
 		else
 		{
 			if (this.head().piece != SNAKE_FULL)
 			{
-				this.head().piece = SNAKE_BODY;
+				this.head().piece = SNAKE_BODY[Math.abs(directionY)][(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)];
 			}
 		}
 		this.body.push(new snakeBody(
 					this.head().x + directionX, 
 					this.head().y + directionY, 
-					SNAKE_HEAD, 
+					SNAKE_HEAD[Math.abs(directionY)][(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)], 
 					this.direction
 					)
 				);
 		this.body.shift();
-		this.tail().piece = SNAKE_TAIL;
+		this.tail().piece = SNAKE_TAIL[Math.abs(this.tail().direction[1])][(this.tail().direction[0] < 0 ? 1 : 0) + (this.tail().direction[1] > 0 ? 1 : 0)]
 		this.direction = [directionX, directionY];
 	},
 	setDir: function (directionX, directionY) {
@@ -317,24 +367,15 @@ function drawPixel(x, y, pixelOffSetX, pixelOffSetY, color) {
 	ctx.fillRect((x + pixelOffSetX) * (pixelPadding + scaleMultiplier), (y + pixelOffSetY) * (scaleMultiplier + pixelPadding), scaleMultiplier, scaleMultiplier);
 }
 
-function drawBitmap(x, y, width, height, bitmap, pixelOffSetX, pixelOffSetY, flipX, flipY, rotate) {
-	
-	flipX = flipX || 0;
-	flipY = flipY || 0;
-
-	if (rotate > 0 || rotate < 0)
-	{
-		//bitmap.unshift(bitmap.slice((width * height) - width - 1), width - 1);
-		bitmap.unshift(bitmap.splice((width * height) - width, width))
-	} 
+function drawBitmap(x, y, width, height, bitmap, pixelOffSetX, pixelOffSetY) {
 
 	for (let i = 0; i < width*height; i++)
 	{
 		if (bitmap[i] == 1)
 		{
 			drawPixel(
-				(x * 4) + Math.abs(Math.floor(i % width) - (flipX * width)),
-				(y * 4) + Math.abs(Math.floor(i / width) - (flipY * height)), 
+				(x * 4) + Math.abs(Math.floor(i % width)),
+				(y * 4) + Math.abs(Math.floor(i / width)), 
 				pixelOffSetX, 
 				pixelOffSetY);
 		}
@@ -343,7 +384,7 @@ function drawBitmap(x, y, width, height, bitmap, pixelOffSetX, pixelOffSetY, fli
 
 function drawSnakePiece(x, y, part, direction) {
 	
-	drawBitmap(x, y, 4, 4, part, 2, 2, 0, 0, 0);
+	drawBitmap(x, y, 4, 4, part, 2, 2);
 
 	/*
 	if (DRAW_SNAKE) {
@@ -497,7 +538,7 @@ function gameLoop(gameObj) {
 }
 
 window.onkeydown = function (e) {
-	console.log(e.keyCode);
+	//console.log(e.keyCode);
 	switch (e.keyCode) {
 		case 38: // down arrow
 			if (Snake.changedDir(0, 1)) {
@@ -550,11 +591,7 @@ window.onkeydown = function (e) {
 
 function setupGame() {
 	var game = new Game(document.getElementById("snake-game"));
-
-
-
 	game.makeFood();
-	
 }
 
 var GAME_SPEED = 200;
