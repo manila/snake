@@ -91,40 +91,33 @@ const SNAKE_EAT = [1, 0, 1, 0,
 	    	   0, 0, 1, 0];
 
 const SNAKE_BODY = [[[0, 0, 0, 0,
-		     1, 1, 0, 1,
-		     1, 0, 1, 1,
-		     0, 0, 0, 0],
-		    [0, 0, 0, 0,
-		     1, 0, 1, 1,
-		     1, 1, 0, 1,
-		     0, 0, 0, 0]],
-		   [[0, 1, 1, 0,
-		     0, 0, 1, 0,
-		     0, 1, 0, 0,
-		     0, 1, 1, 0],
-		    [0, 1, 1, 0,
-		     0, 1, 0, 0,
-		     0, 0, 1, 0,
-		     0, 1, 1, 0]]];
-
-
-const SNAKE_TURN = [[[0, 1, 1, 0,
-		      1, 0, 1, 0,
-		      1, 1, 0, 0,
-		      0, 0, 0, 0],
-		     [0, 1, 1, 0,
-		      1, 0, 1, 1,
 		      1, 1, 0, 1,
-		      0, 1, 1, 0]],
-		    [[0, 1, 1, 0,
-		      1, 0, 1, 1,
-		      1, 1, 0, 1,
-		      0, 1, 1, 0], 
+		      1, 0, 1, 1],
 		     [0, 0, 0, 0,
-		      1, 1, 0, 0,
-		      1, 0, 1, 0,
+		      1, 0, 1, 1,
+		      1, 1, 0, 1,
+		      0, 0, 0, 0]],
+		    [[0, 1, 1, 0,
+		      0, 0, 1, 0,
+		      0, 1, 0, 0,
+		      0, 1, 1, 0],
+		     [0, 1, 1, 0,
+		      0, 1, 0, 0,
+		      0, 0, 1, 0,
 		      0, 1, 1, 0]]];
 
+const SNAKE_TURN = [[[1, 1, 0,
+		      1, 0, 1,
+		      0, 1, 1],
+		     [0, 1, 1,
+		      1, 0, 1,
+		      1, 1, 0]],
+		    [[0, 1, 1,
+		      1, 0, 1,
+		      1, 1, 0], 
+		     [1, 1, 0,
+		      1, 0, 1,
+		      0, 1, 1]]];
 
 const SNAKE_FULL = [0, 1, 1, 0,
 		    1, 1, 0, 1,
@@ -191,16 +184,27 @@ var SNAKE_DIR = [1, 0];
 var FOOD = {};
 
 /* Snake body object, these are the pieces that make up the whole snake */
-class snakeBody {
-	constructor(x, y, piece, direction) {
+class SnakePiece {
+	constructor(x, y, width, height, piece, direction, offsetX, offsetY) {
 		this.x = x;
 		this.y = y;
+		this.offsetX = 2;
+		this.offsetY = 2;
+		this.width = width;
+		this.height = height;
 		this.piece = piece;
+		this.directionX = direction[0];
+		this.directionY = direction[1];
 		this.direction = direction;
 	}
 
 	draw() {
-		drawSnakePiece(this.x, this.y, this.piece, this.direction);
+		drawSnakePiece(this.x, this.y, this.width, this.height, this.piece, this.offsetX, this.offsetY);
+	}
+
+	setDirection(x, y) {
+		this.directionX = x;
+		this.directionY = y;
 	}
 
 	setDir(x, y) {
@@ -208,14 +212,76 @@ class snakeBody {
 	}
 }
 
-/* Snake object, this is the whole snake made up of snakeBody objects */
+class SnakeHead extends SnakePiece {
+	constructor(x, y, directionX, directionY) {
+		super(
+			x, 
+			y, 
+			4, 
+			4, 
+			SNAKE_HEAD[0][0], 
+			[directionX, directionY],
+			0,
+			0
+		);
+	}
+
+}
+
+class SnakeBody extends SnakePiece {
+	constructor(x, y, directionX, directionY) {
+		super(
+			x,
+			y,
+			2,
+			4,
+			SNAKE_BODY[0][0],
+			[directionX, directionY],
+			0,
+			0
+		);
+	}
+
+	bend(directionX, directionY) {
+		this.bendX = this.direction[0] !== 0 ? (this.direction[0] ? 1 : 0) : (directionX ? 1 : 0);
+		this.bendY = this.direction[1] !== 0 ? (this.direction[1] ? 1 : 0) : (directionY ? 1 : 0);
+
+		this.width = 3;
+		this.height = 3;
+
+		this.offsetX = 0;
+		this.offsetY = 0;
+
+		this.piece = SNAKE_BEND[this.bendX][this.bendY];
+	}
+}
+
+class SnakeTail extends SnakePiece {
+	constructor(x, y, directionX, directionY) {
+		let pieceDirX = directionX ? 1 : 0;
+		let pieceDirY = directionY ? 1 : 0;
+
+		super(
+			x,
+			y,
+			4,
+			4,
+			SNAKE_TAIL[pieceDirX][pieceDirY],
+			[directionX, directionY],
+			0,
+			0
+		);
+	}
+}
+
+/* Snake object, this is the whole snake made up of SnakePiece objects */
 var Snake = {
 	direction: [1, 0],
 	body: [
-		new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
-		new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
-		new snakeBody(3, 6, SNAKE_BODY, [1, 0]), 
-		new snakeBody(4, 6, SNAKE_HEAD[0][0], [1, 0]) 
+		new SnakePiece(1, 6, 4, 4, SNAKE_TAIL[0][0], [1, 0]), 
+		new SnakePiece(2, 6, 4, 4, SNAKE_BODY[0][0], [1, 0]), 
+		new SnakePiece(3, 6, 4, 4, SNAKE_BODY[0][0], [1, 0]), 
+		new SnakePiece(4, 6, 4, 4, SNAKE_HEAD[0][0], [1, 0]) 
 	],	
 	head: function () {
 		if (this.body.length > 2)
@@ -238,12 +304,16 @@ var Snake = {
 		}
 	},
 	grow: function () {
-		return this.body.unshift(new snakeBody(this.head().x, this.head().y, SNAKE_HEAD, this.direction));
+		return this.body.unshift(new SnakePiece(this.head().x, this.head().y, 4, 4, SNAKE_HEAD, this.direction));
 	},
 	move: function (directionX, directionY) {
 		if (this.changedDir(directionX, directionY)) {
-			this.head().piece = SNAKE_TURN[(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)][(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)];
+			this.head().piece = SNAKE_TURN[this.head().direction[0] !== 0 ? (this.head().direction[0] < 0 ? 0 : 1) : (directionX < 0 ? 0 : 1)][this.head().direction[1] !== 0 ? (this.head().direction[1] < 0 ? 0 : 1) : (directionY < 0 ? 0 : 1)];
 			this.head().setDir(directionX, directionY);
+			this.head().width = 3;
+			this.head().height = 3;
+			this.head().offsetX = directionX < 0 ? 2 : 3;
+			this.head().offsetY = directionY < 0 ? 2 : 3;
 		}
 		else
 		{
@@ -252,15 +322,21 @@ var Snake = {
 				this.head().piece = SNAKE_BODY[Math.abs(directionY)][(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)];
 			}
 		}
-		this.body.push(new snakeBody(
+		this.body.push(new SnakePiece(
 					this.head().x + directionX, 
 					this.head().y + directionY, 
+					4,
+					4,
 					SNAKE_HEAD[Math.abs(directionY)][(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)], 
 					this.direction
 					)
 				);
 		this.body.shift();
 		this.tail().piece = SNAKE_TAIL[Math.abs(this.tail().direction[1])][(this.tail().direction[0] < 0 ? 1 : 0) + (this.tail().direction[1] > 0 ? 1 : 0)]
+		this.tail().width = 4;
+		this.tail().height = 4;
+		this.tail().offsetX = 2;
+		this.tail().offsetY = 2;
 		this.direction = [directionX, directionY];
 	},
 	setDir: function (directionX, directionY) {
@@ -289,8 +365,6 @@ var Snake = {
 	willEat: function (foodX, foodY) {
 		if (Snake.head().x + (Snake.direction[0]) == foodX && Snake.head().y + (Snake.direction[1]) == foodY) {
 			Snake.head().piece = SNAKE_EAT;
-		} else {
-			//Snake.head().piece = SNAKE_HEAD;
 		}
 	},
 	checkCollison: function (x, y) {
@@ -299,7 +373,6 @@ var Snake = {
 			if (x == this.body[i].x && y == this.body[i].y)
 			{
 				return true;
-
 			}
 		}
 
@@ -382,9 +455,9 @@ function drawBitmap(x, y, width, height, bitmap, pixelOffSetX, pixelOffSetY) {
 	}
 }
 
-function drawSnakePiece(x, y, part, direction) {
+function drawSnakePiece(x, y, width, height, part, offsetX, offsetY) {
 	
-	drawBitmap(x, y, 4, 4, part, 2, 2);
+	drawBitmap(x, y, width, height, part, offsetX, offsetY);
 
 	/*
 	if (DRAW_SNAKE) {
@@ -430,19 +503,7 @@ function drawGame() {
 function updateSnake() {
 	if (Snake.checkCollison(Snake.head().x + Snake.direction[0], Snake.head().y + Snake.direction[1])) {
 		Snake.direction = [0, 0];
-		blinkSnake();
-		//console.log("called");	
-		/*
-		Snake.body = [
-			new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
-			new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
-			new snakeBody(3, 6, SNAKE_BODY, [1, 0]), 
-			new snakeBody(4, 6, SNAKE_HEAD, [1, 0]) 
-		];
-		*/
-
 		SCORE = 0;
-		
 	}
 
 	if (Snake.direction[0] != 0 || Snake.direction[1] != 0)
@@ -476,34 +537,12 @@ function updateSnake() {
 function resetSnake() {
 	DRAW_SNAKE = true;
 	Snake.body = [
-		new snakeBody(1, 6, SNAKE_TAIL, [1, 0]), 
-		new snakeBody(2, 6, SNAKE_BODY, [1, 0]), 
-		new snakeBody(3, 6, SNAKE_BODY, [1, 0]), 
-		new snakeBody(4, 6, SNAKE_HEAD, [1, 0]) 
+		new SnakePiece(1, 6, SNAKE_TAIL[0][0], [1, 0]), 
+		new SnakePiece(2, 6, SNAKE_BODY[0][0], [1, 0]), 
+		new SnakePiece(3, 6, SNAKE_BODY[0][0], [1, 0]), 
+		new SnakePiece(4, 6, SNAKE_HEAD[0][0], [1, 0]) 
 	];
 
-}
-
-function blinkSnake() {
-	var blinkCount = 0;
-	var tempSnakeBody = Snake.body;
-	Snake.direction = [0, 0];
-	var snakeBlinkInterval = setInterval(function () {
-
-		if (blinkCount % 2 == 0) {
-			DRAW_SNAKE = false;
-		} else {
-			DRAW_SNAKE = true;
-		} 
-		
-		if (blinkCount > 9) {
-			clearInterval(snakeBlinkInterval);
-			resetSnake();
-		}
-
-		blinkCount++;
-		
-	}, GAME_SPEED);
 }
 
 // Generate an apple somwhere randomly on the board
@@ -519,10 +558,6 @@ function makeFood() {
 	{
 		makeFood();
 	}
-}
-
-function generateBeets() {
-	FOOD_PIECES.push({x: 0, y: 0});
 }
 
 function gameLoop(gameObj) {
