@@ -90,23 +90,20 @@ const SNAKE_EAT = [1, 0, 1, 0,
 		   1, 1, 0, 0,
 	    	   0, 0, 1, 0];
 
-const SNAKE_BODY = [[[0, 0, 0, 0,
-		      1, 1, 0, 1,
+const SNAKE_BODY = [[[1, 1, 0, 1,
 		      1, 0, 1, 1],
-		     [0, 0, 0, 0,
-		      1, 0, 1, 1,
-		      1, 1, 0, 1,
-		      0, 0, 0, 0]],
-		    [[0, 1, 1, 0,
-		      0, 0, 1, 0,
-		      0, 1, 0, 0,
-		      0, 1, 1, 0],
-		     [0, 1, 1, 0,
-		      0, 1, 0, 0,
-		      0, 0, 1, 0,
-		      0, 1, 1, 0]]];
+		     [1, 0, 1, 1,
+		      1, 1, 0, 1]],
+		    [[1, 1,
+		      0, 1,
+		      1, 0,
+		      1, 1],
+		     [1, 1,
+		      1, 0,
+		      0, 1,
+		      1, 1]]];
 
-const SNAKE_TURN = [[[1, 1, 0,
+const SNAKE_BEND = [[[1, 1, 0,
 		      1, 0, 1,
 		      0, 1, 1],
 		     [0, 1, 1,
@@ -193,13 +190,16 @@ class FoodPiece {
 /* Snake body object, these are the pieces that make up the whole snake */
 class SnakePiece {
 	constructor(x, y, width, height, piece, direction, offsetX, offsetY) {
+		let pieceDirX = Math.abs(direction[1]);
+		let pieceDirY = (direction[0] < 0 ? 1 : 0) + (direction[1] > 0 ? 1 : 0);
+
 		this.x = x;
 		this.y = y;
-		this.offsetX = 2;
-		this.offsetY = 2;
+		this.offsetX = offsetX;
+		this.offsetY = offsetY;
 		this.width = width;
 		this.height = height;
-		this.piece = piece;
+		this.piece = piece[pieceDirX][pieceDirY];
 		this.directionX = direction[0];
 		this.directionY = direction[1];
 		this.direction = direction;
@@ -226,11 +226,11 @@ class SnakeHead extends SnakePiece {
 			y, 
 			4, 
 			4, 
-			SNAKE_HEAD[0][0], 
+			SNAKE_HEAD, 
 			[directionX, directionY],
-			0,
-			0
-		);
+			2,
+			2
+		     );
 	}
 
 }
@@ -240,43 +240,42 @@ class SnakeBody extends SnakePiece {
 		super(
 			x,
 			y,
-			2,
-			4,
-			SNAKE_BODY[0][0],
+			directionX !== 0 ? 4 : 2,
+			directionY !== 0 ? 4 : 2,
+			SNAKE_BODY,
 			[directionX, directionY],
-			0,
-			0
+			directionX !== 0 ? 2 : 3,
+			directionY !== 0 ? 2 : 3
 		);
 	}
 
 	bend(directionX, directionY) {
-		this.bendX = this.direction[0] !== 0 ? (this.direction[0] ? 1 : 0) : (directionX ? 1 : 0);
-		this.bendY = this.direction[1] !== 0 ? (this.direction[1] ? 1 : 0) : (directionY ? 1 : 0);
+		this.bendX = this.direction[0] !== 0 ? (this.direction[0] < 0 ? 0 : 1) : (directionX < 0 ? 0 : 1);
+		this.bendY = this.direction[1] !== 0 ? (this.direction[1] < 0 ? 0 : 1) : (directionY < 0 ? 0 : 1);
 
 		this.width = 3;
 		this.height = 3;
 
-		this.offsetX = 0;
-		this.offsetY = 0;
+		this.offsetX = this.x % 4 == 0 ? 2 : 3;
+		this.offsetY = 2;
 
 		this.piece = SNAKE_BEND[this.bendX][this.bendY];
+
+		this.setDir(directionX, directionY);
 	}
 }
 
 class SnakeTail extends SnakePiece {
 	constructor(x, y, directionX, directionY) {
-		let pieceDirX = directionX ? 1 : 0;
-		let pieceDirY = directionY ? 1 : 0;
-
 		super(
 			x,
 			y,
 			4,
 			4,
-			SNAKE_TAIL[pieceDirX][pieceDirY],
+			SNAKE_TAIL,
 			[directionX, directionY],
-			0,
-			0
+			2,
+			2
 		);
 	}
 }
@@ -300,6 +299,9 @@ var Snake = {
 			return [];
 		}
 	},
+	set head(snakePiece) {
+		this.body[this.body.length - 1] = snakePiece;
+	},
 	get tail() {
 		if (this.body.length > 2)
 		{
@@ -310,34 +312,66 @@ var Snake = {
 			return [];
 		}
 	},
+	set tail(snakePiece) {
+		this.body[0] = snakePiece;		
+	},
 	grow() {
-		return this.body.unshift(new SnakePiece(this.head.x, this.head.y, 4, 4, SNAKE_HEAD, this.direction));
+		return this.body.unshift(new SnakeHead(this.head.x, this.head.y, this.direction[0], this.direction[1]));
+		/*
+		return this.body.unshift(new SnakePiece(
+							this.head.x, 
+							this.head.y, 
+							4, 
+							4, 
+							SNAKE_HEAD, 
+							this.direction
+							));
+		*/
 	},
 	move(directionX, directionY) {
-		if (this.changedDir(directionX, directionY)) {
-			this.head.piece = SNAKE_TURN[this.head.direction[0] !== 0 ? (this.head.direction[0] < 0 ? 0 : 1) : (directionX < 0 ? 0 : 1)][this.head.direction[1] !== 0 ? (this.head.direction[1] < 0 ? 0 : 1) : (directionY < 0 ? 0 : 1)];
-			this.head.setDir(directionX, directionY);
+		if (this.changedDir(directionX, directionY)) 
+		{	
+			this.head = new SnakeBody(
+						  this.head.x, 
+						  this.head.y, 
+						  this.head.direction[0], 
+						  this.head.direction[1]
+						 );
+
+			this.head.bend(directionX, directionY);
+
+			/*
+			this.head.piece = SNAKE_BEND[this.head.direction[0] !== 0 ? (this.head.direction[0] < 0 ? 0 : 1) : (directionX < 0 ? 0 : 1)][this.head.direction[1] !== 0 ? (this.head.direction[1] < 0 ? 0 : 1) : (directionY < 0 ? 0 : 1)];
 			this.head.width = 3;
 			this.head.height = 3;
 			this.head.offsetX = directionX < 0 ? 2 : 3;
 			this.head.offsetY = directionY < 0 ? 2 : 3;
+			*/
 		}
 		else
 		{
 			if (this.head.piece != SNAKE_FULL)
 			{
-				this.head.piece = SNAKE_BODY[Math.abs(directionY)][(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)];
+				this.head = new SnakeBody(this.head.x, this.head.y, directionX, directionY); //SNAKE_BODY[Math.abs(directionY)][(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)];
 			}
 		}
-		this.body.push(new SnakePiece(
-					this.head.x + directionX, 
-					this.head.y + directionY, 
-					4,
-					4,
-					SNAKE_HEAD[Math.abs(directionY)][(directionX < 0 ? 1 : 0) + (directionY > 0 ? 1 : 0)], 
-					this.direction
-					)
-				);
+
+		this.body.push(new SnakeHead(
+					      this.head.x + directionX, 
+					      this.head.y + directionY, 
+					      this.direction[0],
+					      this.direction[1]
+					     ));
+
+		this.body.shift();
+
+		this.tail = new SnakeTail(
+					  this.tail.x, 
+					  this.tail.y, 
+					  this.tail.direction[0], 
+					  this.tail.direction[1]
+					 );
+		/*
 		this.body.shift();
 		this.tail.piece = SNAKE_TAIL[Math.abs(this.tail.direction[1])][(this.tail.direction[0] < 0 ? 1 : 0) + (this.tail.direction[1] > 0 ? 1 : 0)]
 		this.tail.width = 4;
@@ -345,6 +379,7 @@ var Snake = {
 		this.tail.offsetX = 2;
 		this.tail.offsetY = 2;
 		this.direction = [directionX, directionY];
+		*/
 	},
 	setDir: function (directionX, directionY) {
 		this.direction[0] = directionX;
@@ -354,7 +389,10 @@ var Snake = {
 		
 		if (this.body.length > 2)
 		{
-			if (this.body[Snake.body.length - 2].direction[0] == directionX && this.body[Snake.body.length - 2].direction[1] == directionY)
+			if (
+				this.body[Snake.body.length - 2].direction[0] == directionX && 
+				this.body[Snake.body.length - 2].direction[1] == directionY
+			)
 			{
 				return false;
 			}
@@ -370,7 +408,11 @@ var Snake = {
 		
 	},
 	willEat: function (foodX, foodY) {
-		if (Snake.head.x + (Snake.direction[0]) == foodX && Snake.head.y + (Snake.direction[1]) == foodY) {
+		if (
+			Snake.head.x + (Snake.direction[0]) == foodX &&
+			Snake.head.y + (Snake.direction[1]) == foodY
+		)
+		{
 			Snake.head.piece = SNAKE_EAT;
 		}
 	},
@@ -410,7 +452,12 @@ function drawOutline() {
 	{
 		for (h = 8; h < canvasHeight / scaleMultiplier; h++)
 		{
-			if (h == 8 || h == gameHeight - 1 || w == 0 || w == gameWidth -1)
+			if (
+				h == 8 || 
+				h == gameHeight - 1 || 
+				w == 0 || 
+				w == gameWidth -1
+			   )
 			{
 				drawPixel(w, h, 0, 0);
 			}
@@ -444,7 +491,12 @@ function drawPixel(x, y, pixelOffSetX, pixelOffSetY, color) {
 		ctx.shadowOffsetY = 0.5;
 	}
 
-	ctx.fillRect((x + pixelOffSetX) * (pixelPadding + scaleMultiplier), (y + pixelOffSetY) * (scaleMultiplier + pixelPadding), scaleMultiplier, scaleMultiplier);
+	ctx.fillRect(
+			(x + pixelOffSetX) * (pixelPadding + scaleMultiplier), 
+			(y + pixelOffSetY) * (scaleMultiplier + pixelPadding),
+			scaleMultiplier, 
+			scaleMultiplier
+		    );
 }
 
 function drawBitmap(x, y, width, height, bitmap, pixelOffSetX, pixelOffSetY) {
@@ -454,10 +506,11 @@ function drawBitmap(x, y, width, height, bitmap, pixelOffSetX, pixelOffSetY) {
 		if (bitmap[i] == 1)
 		{
 			drawPixel(
-				(x * 4) + Math.abs(Math.floor(i % width)),
-				(y * 4) + Math.abs(Math.floor(i / width)), 
-				pixelOffSetX, 
-				pixelOffSetY);
+					(x * 4) + Math.abs(Math.floor(i % width)),
+					(y * 4) + Math.abs(Math.floor(i / width)), 
+					pixelOffSetX, 
+					pixelOffSetY
+				 );
 		}
 	}
 }
