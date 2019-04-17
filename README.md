@@ -1,6 +1,10 @@
 # Snake
 An HTML5 clone of the game snake II
 
+<p align='center'>
+  <img src='images/gameplay.gif' alt='Gameplay of snake game' />
+</p>
+
 # How to Play
 
 Use the arrow keys to navigate the snake twords the delishious pixels, don't try to chomp on yourself!
