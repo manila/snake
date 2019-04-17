@@ -250,18 +250,55 @@ class SnakeBody extends SnakePiece {
 	}
 
 	bend(directionX, directionY) {
+		this.bendingDirection = directionX + " " + directionY;
 		this.bendX = this.direction[0] !== 0 ? (this.direction[0] < 0 ? 0 : 1) : (directionX < 0 ? 0 : 1);
 		this.bendY = this.direction[1] !== 0 ? (this.direction[1] < 0 ? 0 : 1) : (directionY < 0 ? 0 : 1);
 
 		this.width = 3;
 		this.height = 3;
 
-		this.offsetX = this.x % 4 == 0 ? 2 : 3;
-		this.offsetY = 2;
+		//this.offsetX;
+		//this.offsetY = 2;
 
 		this.piece = SNAKE_BEND[this.bendX][this.bendY];
 
 		this.setDir(directionX, directionY);
+
+		/*
+		if (this.directionX == -1 && this.directionY == 0)
+		{
+			this.offsetX = 3;
+			this.offsetY = 2 + this.bendY;
+		}
+		else if (this.directionX == 0 && this.directionY == -1)
+		{
+			this.offsetX = 3;
+			this.offsetY = 3 + this.directionY;
+		}
+		else if (this.directionX == 0 && this.directionY == 1)
+		{
+			this.offsetX = 2 + this.bendX;
+			this.offsetY = 2;	
+		}
+		else if (this.directionX == 1 && this.directionY == 0)
+		{
+			this.offsetY = 2;
+			this.offsetX = 2 + this.bendX;		
+		}
+		*/
+
+		if (this.direction[1] == 0 && this.directionY == -1 ||
+		    this.direction[1] == 1 && this.directionY == 0)
+		{
+			this.offsetX = 3 + this.direction[0];
+			this.offsetY = 3;
+		}
+		else
+		{
+		this.offsetX = 2;
+		this.offsetY = 2;
+		}
+
 	}
 }
 
