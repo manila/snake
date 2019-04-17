@@ -1,5 +1,5 @@
 # Snake
-A clone of the game snake II
+An HTML5 clone of the game snake II
 
 # How to Play
 
