@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 var DISABLE_SHADOWS = true;
 var SNAKE_ENABLED = true;
 
-const gameGridWidth = 21;
+const gameGridWidth = 21; //
 const gameGridHeight = 12;
 const gameHeight = 48;
 const gameWidth = 84;
@@ -199,20 +199,36 @@ class FoodPiece {
 }
 
 /* Snake body object, these are the pieces that make up the whole snake */
+
+
+/* Every "piece" of the snake is a class, the snake is broken up into head, tail, etc... */
 class SnakePiece {
 	constructor(x, y, width, height, piece, direction, offsetX, offsetY) {
+
+		/* Figure our what direction piece faces, use the correct oriented bitmap */
 		this.pieceDirX = Math.abs(direction[1]);
 		this.pieceDirY = (direction[0] < 0 ? 1 : 0) + (direction[1] > 0 ? 1 : 0);
 
+		/* X & Y coornate of body on the grid */
 		this.x = x;
 		this.y = y;
+		
+		/* Offset in "Pixels" of piece in grid */
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
+
+		/* Width and Height of bitmaps */
 		this.width = width;
 		this.height = height;
+
+		/* Bitmap, select the right orientation */
 		this.piece = piece[this.pieceDirX][this.pieceDirY];
+
+		/* Direction piece is headed */
 		this.directionX = direction[0];
 		this.directionY = direction[1];
+		
+		/* A copy of direction piece is headed */
 		this.direction = direction;
 	}
 
@@ -254,16 +270,18 @@ class SnakeBody extends SnakePiece {
 		super(
 			x,
 			y,
-			directionX !== 0 ? 4 : 2,
-			directionY !== 0 ? 4 : 2,
+			directionX !== 0 ? 4 : 2, // Based on direction, change with and height to match orientation of the piece
+			directionY !== 0 ? 4 : 2, 
 			SNAKE_BODY,
 			[directionX, directionY],
-			directionX !== 0 ? 2 : 3,
+			directionX !== 0 ? 2 : 3, // Based on direction, change the offset in coodinate
 			directionY !== 0 ? 2 : 3
 		);
 	}
 
 	bend(directionX, directionY) {
+
+		/* This is the snake body bend bitmap, we need to know which way to bend */
 		this.bendX = this.direction[0] !== 0 ? (this.direction[0] < 0 ? 0 : 1) : (directionX < 0 ? 0 : 1);
 		this.bendY = this.direction[1] !== 0 ? (this.direction[1] < 0 ? 0 : 1) : (directionY < 0 ? 0 : 1);
 
@@ -274,6 +292,12 @@ class SnakeBody extends SnakePiece {
 
 		this.setDir(directionX, directionY);
 
+
+		/*
+		TODO
+
+		clean this section up, this calculates the offset of the bend based on which direction snake is coming, going
+		*/
 		if ((this.x + this.direction[0] >= this.x || this.direction[1] < 0) && (this.directionX < 1))
 		{
 			this.offsetX = 3;
@@ -319,7 +343,7 @@ var Snake = {
 		new SnakeBody(3, 6, 1, 0),
 		new SnakeHead(4, 6, 1, 0)
 	],	
-	get head() {
+	get head() { // Getter function to return the head as a property
 		if (this.body.length > 2)
 		{
 			return this.body[this.body.length - 1];
@@ -329,10 +353,10 @@ var Snake = {
 			return [];
 		}
 	},
-	set head(snakePiece) {
+	set head(snakePiece) { // Setter function to change the head into another type of piece
 		this.body[this.body.length - 1] = snakePiece;
 	},
-	get tail() {
+	get tail() { 
 		if (this.body.length > 2)
 		{
 			return this.body[0];
@@ -346,6 +370,7 @@ var Snake = {
 		this.body[0] = snakePiece;		
 	},
 	grow() {
+		// Grow snake by adding a new SnakeHead at the end of the Array
 		return this.body.unshift(new SnakeHead(this.head.x, this.head.y, this.direction[0], this.direction[1]));
 	},
 	move(directionX, directionY) {
@@ -445,6 +470,7 @@ function drawGrid() {
 	}
 }
 
+/* draw a horizonal line of pixels given how many pixels down */
 function drawHorizontalLine(y) {
 	for (let x = 0; x < gameWidth; x++)
 	{
