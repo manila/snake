@@ -1,10 +1,17 @@
-# snake
+# Snake
 A clone of the game snake II
 
-WORK IN PROGRESS
+# How to Play
+
+Use the arrow keys to navigate the snake twords the delishious pixels, don't try to chomp on yourself!
 
 ### Installation
 live version: https://manila.me/snake
 
-### How to play
-Control snake with arrow keys, don't run into yourself!
+### TODO
+
+- Use requestAnimationFrame over setInterval
+- Add touch controls for tablets and phones
+- Add Bonus Bugs
+- Add Obstactles
+- Multiplayer
