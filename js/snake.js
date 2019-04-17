@@ -2,6 +2,7 @@ const canvas = document.getElementById("snake-game");
 const ctx = canvas.getContext("2d");
 
 var DISABLE_SHADOWS = true;
+var SNAKE_ENABLED = true;
 
 const gameGridWidth = 21;
 const gameGridHeight = 12;
@@ -83,12 +84,22 @@ const SNAKE_HEAD = [[[1, 0, 0, 0,
 		      0, 1, 1, 0,
 	    	      0, 0, 0, 0]]];
 
-
-/* Open mouth snake bitmap */
-const SNAKE_EAT = [1, 0, 1, 0,
-		   0, 1, 0, 0,
-		   1, 1, 0, 0,
-	    	   0, 0, 1, 0];
+const SNAKE_EAT = [[[1, 0, 1, 0,
+		      0, 1, 0, 0,
+		      1, 1, 0, 0,
+	    	      0, 0, 1, 0],
+		     [0, 1, 0, 1,
+		      0, 0, 1, 0,
+		      0, 0, 1, 1,
+	    	      0, 1, 0, 0]],
+		    [[0, 0, 0, 0,
+		      1, 0, 0, 1,
+		      0, 1, 1, 0,
+	    	      1, 0, 1, 0],
+		     [1, 0, 1, 0,
+		      0, 1, 1, 0,
+		      1, 0, 0, 1,
+	    	      0, 0, 0, 0]]];
 
 const SNAKE_BODY = [[[1, 1, 0, 1,
 		      1, 0, 1, 1],
@@ -190,8 +201,8 @@ class FoodPiece {
 /* Snake body object, these are the pieces that make up the whole snake */
 class SnakePiece {
 	constructor(x, y, width, height, piece, direction, offsetX, offsetY) {
-		let pieceDirX = Math.abs(direction[1]);
-		let pieceDirY = (direction[0] < 0 ? 1 : 0) + (direction[1] > 0 ? 1 : 0);
+		this.pieceDirX = Math.abs(direction[1]);
+		this.pieceDirY = (direction[0] < 0 ? 1 : 0) + (direction[1] > 0 ? 1 : 0);
 
 		this.x = x;
 		this.y = y;
@@ -199,7 +210,7 @@ class SnakePiece {
 		this.offsetY = offsetY;
 		this.width = width;
 		this.height = height;
-		this.piece = piece[pieceDirX][pieceDirY];
+		this.piece = piece[this.pieceDirX][this.pieceDirY];
 		this.directionX = direction[0];
 		this.directionY = direction[1];
 		this.direction = direction;
@@ -233,6 +244,9 @@ class SnakeHead extends SnakePiece {
 		     );
 	}
 
+	eat() {
+		this.piece = SNAKE_EAT[this.pieceDirX][this.pieceDirY];
+	}	
 }
 
 class SnakeBody extends SnakePiece {
@@ -250,7 +264,6 @@ class SnakeBody extends SnakePiece {
 	}
 
 	bend(directionX, directionY) {
-		this.bendingDirection = directionX + " " + directionY;
 		this.bendX = this.direction[0] !== 0 ? (this.direction[0] < 0 ? 0 : 1) : (directionX < 0 ? 0 : 1);
 		this.bendY = this.direction[1] !== 0 ? (this.direction[1] < 0 ? 0 : 1) : (directionY < 0 ? 0 : 1);
 
@@ -336,6 +349,7 @@ var Snake = {
 		return this.body.unshift(new SnakeHead(this.head.x, this.head.y, this.direction[0], this.direction[1]));
 	},
 	move(directionX, directionY) {
+		if (SNAKE_ENABLED) {
 		if (this.changedDir(directionX, directionY)) 
 		{	
 			this.head = new SnakeBody(
@@ -355,6 +369,7 @@ var Snake = {
 			}
 		}
 
+		
 		this.body.push(new SnakeHead(
 					      this.head.x + directionX, 
 					      this.head.y + directionY, 
@@ -370,6 +385,7 @@ var Snake = {
 					  this.tail.direction[0], 
 					  this.tail.direction[1]
 					 );
+		}
 	},
 	setDir: function (directionX, directionY) {
 		this.direction[0] = directionX;
@@ -403,7 +419,7 @@ var Snake = {
 			Snake.head.y + (Snake.direction[1]) == foodY
 		)
 		{
-			Snake.head.piece = SNAKE_EAT;
+			Snake.head.eat();
 		}
 	},
 	checkCollison: function (x, y) {
@@ -530,7 +546,7 @@ function drawGame() {
 function updateSnake() {
 	if (Snake.checkCollison(Snake.head.x + Snake.direction[0], Snake.head.y + Snake.direction[1])) {
 		Snake.direction = [0, 0];
-		SCORE = 0;
+		resetSnake();
 	}
 
 	if (Snake.direction[0] != 0 || Snake.direction[1] != 0)
@@ -562,14 +578,19 @@ function updateSnake() {
 
 /* Delete snake and make a new one */
 function resetSnake() {
-	DRAW_SNAKE = true;
-	Snake.body = [
-		new SnakePiece(1, 6, SNAKE_TAIL[0][0], [1, 0]), 
-		new SnakePiece(2, 6, SNAKE_BODY[0][0], [1, 0]), 
-		new SnakePiece(3, 6, SNAKE_BODY[0][0], [1, 0]), 
-		new SnakePiece(4, 6, SNAKE_HEAD[0][0], [1, 0]) 
-	];
+	SNAKE_ENABLED = false;
 
+	setTimeout(function () {
+		Snake.body = [
+			new SnakeTail(1, 6, 1, 0),
+			new SnakeBody(2, 6, 1, 0),
+			new SnakeBody(3, 6, 1, 0),
+			new SnakeHead(4, 6, 1, 0)
+		]
+
+		SCORE = 0;
+		SNAKE_ENABLED = true;
+	}, 1500);
 }
 
 // Generate an apple somwhere randomly on the board
