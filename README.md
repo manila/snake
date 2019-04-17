@@ -7,7 +7,7 @@ An HTML5 clone of the game snake II
 
 # How to Play
 
-Use the arrow keys to navigate the snake twords the delishious pixels, don't try to chomp on yourself!
+Use the arrow keys to navigate the snake towards the delishious pixels, don't try to chomp on yourself!
 
 ### Installation
 live version: https://manila.me/snake
