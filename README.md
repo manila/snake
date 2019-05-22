@@ -1,5 +1,5 @@
 # Snake
-An HTML5 clone of the game snake II
+An HTML5 clone of the game Snake II
 
 <p align='center'>
   <img src='images/gameplay.gif' alt='Gameplay of snake game' />
